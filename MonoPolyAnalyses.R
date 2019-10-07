@@ -640,3 +640,21 @@ plot(true_n100N3000bad70$nadmin, sa_n100N1000bad70$nadmin,
      col = 3 - true_n100N1000bad70$bad, pch = 16)
 abline(0, 1)
 
+
+## count the number of the truly most informative that are administered for each row
+
+res$nBest <- sapply(1:100, function(i){
+  infos <- info.ib.cdf(theta = res$truetheta[i], pars = get(paste0("true_n100N", res$N[i], "bad", res$bad[i])))
+  its <- which(rank(infos) > 75)
+  res$nBest[i] <- sum(its %in% res[i, grep("itemadmin", colnames(res))])
+})
+
+summary(res$nBest)
+
+ggplot(res, aes(N, nBest)) + geom_boxplot()
+
+ggplot(res, aes(bad, nBest)) + geom_boxplot()
+
+ggplot(res, aes(model, nBest)) + geom_boxplot() ## interesting - SA performs closest to truth
+
+ggplot(res, aes(select, nBest)) + geom_boxplot()
