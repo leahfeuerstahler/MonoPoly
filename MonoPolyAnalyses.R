@@ -642,8 +642,9 @@ abline(0, 1)
 
 
 ## count the number of the truly most informative that are administered for each row
-
-res$nBest <- sapply(1:100, function(i){
+res$nBest<-rep(NA,nrow(res)) # initialize
+## also a bit slow to compute
+res$nBest <- sapply(1:nrow(res), function(i){
   infos <- info.ib.cdf(theta = res$truetheta[i], pars = get(paste0("true_n100N", res$N[i], "bad", res$bad[i])))
   its <- which(rank(infos) > 75)
   res$nBest[i] <- sum(its %in% res[i, grep("itemadmin", colnames(res))])
@@ -657,4 +658,13 @@ ggplot(res, aes(bad, nBest)) + geom_boxplot()
 
 ggplot(res, aes(model, nBest)) + geom_boxplot() ## interesting - SA performs closest to truth
 
-ggplot(res, aes(select, nBest)) + geom_boxplot()
+ggplot(res, aes(select, nBest)) + geom_boxplot() # MPWI isn't too bad
+
+# Looks like SA is better when there's lots of bad items
+
+ggplot(res %>% filter(select=="MPWI"&thetacond=="normal01"), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~N)
+ggplot(res %>% filter(select=="KL"&thetacond=="normal01"), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~N)
+
+## plots at discrete points along theta?
+ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==1000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
+ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==3000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
