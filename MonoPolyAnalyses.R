@@ -6,6 +6,7 @@ library(forcats)
 library(purrr)
 library(rpf)
 
+### CFF - results I wonder if we should report have three asterisks: ***
 #### Complete Data Results - Read in Data ####
 
 res <- read_table2(file="Results/CompleteResults.txt")
@@ -101,6 +102,9 @@ ggplot(recovery %>% filter(thetacond == "normal01"),
        aes(model, rmse, group = select, color = select)) + 
   geom_point() + geom_line() + facet_wrap(~linetype)
 
+aggregate(rmse ~ model, data=recovery, mean)
+aggregate(rmse ~ model + N + bad, data=recovery, mean) # *** CFF - report this in-text? (or a condensed way of summarizing these)
+
 ggplot(recovery %>% filter(thetacond == "normal01"),
        aes(model, bias, group = select, color = select)) + 
   geom_point() + geom_line() + facet_wrap(~linetype) + geom_hline(yintercept = 0)
@@ -110,10 +114,17 @@ ggplot(recovery %>% filter(thetacond == "normal01"),
   geom_point() + geom_line() + facet_wrap(~linetype)
 
 # across the theta continuum
+# *** CFF - report this one? (say something about how the selection method did not seem to make a big difference?)
+# Do we want to report bias or meanse?
+# *** CFF - some summary on whether MPWI and FI differs much from KL? Or put MPWI and FI in supplement?
+# If motivation is to use MP w/ existing item selection algorithm (likely FI or MPWI for operational testing), then there should be some
+# mention of it, even if just to say it does just as well as KL
+# Probably omit KLL and KLP, as these only show up in catR (not sure if published) and didn't do great anyway. But, mention in-text or footnote.
 ggplot(recovery %>% filter(select == "KL" & thetacond != "normal01"),
        aes(thetacond, rmse, group = model, color = model)) + 
   geom_point() + geom_line() + facet_wrap(~linetype)
 
+# *** CFF - report this one? Though I have some trouble making good sense of this one
 ggplot(recovery %>% filter(select == "KL" & thetacond != "normal01"),
        aes(thetacond, bias, group = model, color = model)) + 
   geom_point() + geom_line() + facet_wrap(~linetype) + geom_hline(yintercept = 0)
@@ -184,6 +195,8 @@ ggplot(recovery2 %>% filter(select == "KLL" & thetacond != "normal01" & model !=
 
 
 #### Patterns of Bad Items Administered ####
+
+# CFF - should we report anything from this section?
 
 # add character column of reference item bank
 res <- res %>% 
@@ -469,6 +482,7 @@ RIMSE_res2 <- rbind(data.frame(bank = "n100N1000bad30", model = "2PL", bad = tru
                     data.frame(bank = "n100N3000bad70", model = "KS", bad = true_n100N3000bad70$bad, ks_n100N3000bad70[, c("RIMSE_p")]))
 
 # Looks consistent with prior research. KS doesn't do so well when true model is well-behaved
+# *** CFF Report this one?
 ggplot(RIMSE_res2, aes(bad, RIMSE_p, fill = model)) + 
   geom_boxplot(outlier.shape = NA) + lims(y = c(0, .35)) + facet_wrap(~bank)
 #############################
@@ -499,6 +513,8 @@ ggplot(testinfo_dat, aes(theta, info, col = infotype)) + facet_wrap(~itembank) +
 
 # average item information is almost always higher for bad items than for good items
 ggplot(testinfo_dat %>% filter(infotype != "total"), aes(theta, avg_info, col = infotype)) + facet_wrap(~itembank) + geom_path()
+
+# report some numerical summary of the above? i.e., in-text rather than a plot?
 
 #######################
 # CFF: What about true information vs estimated information (collapsing across type of item) - can we visualize?
@@ -553,9 +569,10 @@ testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100
 testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad70",model="mod0", nbad = 70, nit_info = 70, infotype = "bad", info = rowSums(info.ib.mp(theta, mod0_n100N3000bad70)[, true_n100N1000bad70$bad])))
 testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad70",model="mod0", nbad = 70, nit_info = 30, infotype = "good", info = rowSums(info.ib.mp(theta, mod0_n100N3000bad70)[, !true_n100N1000bad70$bad])))
 
+# *** CFF - report a plot of this one?
+# Is there an in-text summary we can provide?
 ggplot(testinfo_dat2 %>% filter(infotype == "total"), aes(theta, info, col = model)) + facet_wrap(~itembank) + geom_path() #hmm. I imagine there's a way to compute a discrepancy between true and estimated
 #######################
-
 
 ## look at the variety of items administered for each model condition
 true_n100N1000bad30$nadmin <- res %>% filter(ni == 100, N == 1000, bad == 30, model == "true") %>% select(itemadmin1:itemadmin25) %>% 
@@ -595,6 +612,7 @@ sa_n100N3000bad70$nadmin <- res %>% filter(ni == 100, N == 3000, bad == 70, mode
   map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
 
 # count the number of items never administerd
+# *** CFF - if space, some in-text description of item exposure?
 sum(true_n100N1000bad30$nadmin == 0)
 sum(ks_n100N1000bad30$nadmin == 0)
 sum(mod0_n100N1000bad30$nadmin == 0)
@@ -658,13 +676,23 @@ ggplot(res, aes(bad, nBest)) + geom_boxplot()
 
 ggplot(res, aes(model, nBest)) + geom_boxplot() ## interesting - SA performs closest to truth
 
+aggregate(nBest ~ model, data=res, mean)
+# *** CFF - Report this? for normal01? Mention collapsing across conditions?
+aggregate(nBest ~ model + thetacond, data=res%>%filter(thetacond=="normal01"), mean) 
+
 ggplot(res, aes(select, nBest)) + geom_boxplot() # MPWI isn't too bad
+# *** CFF - numerical summary of this?
+aggregate(nBest ~ select, data=res%>%filter(thetacond=="normal01"), mean) # report this. Mention collapsing across conditions?
 
 # Looks like SA is better when there's lots of bad items
 
 ggplot(res %>% filter(select=="MPWI"&thetacond=="normal01"), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~N)
 ggplot(res %>% filter(select=="KL"&thetacond=="normal01"), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~N)
 
-## plots at discrete points along theta?
+## plots at discrete points along theta
 ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==1000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
 ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==3000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
+
+# *** CFF - Report these? Only ones that have KS in them
+ggplot(res %>% filter(select=="KL"&thetacond!="normal01"&N==1000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
+ggplot(res %>% filter(select=="KL"&thetacond!="normal01"&N==3000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
