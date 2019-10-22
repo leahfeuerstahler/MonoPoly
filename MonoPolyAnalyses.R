@@ -94,7 +94,7 @@ res <- res %>%
          thetadiff2 = thetadiff^2)
 recovery <- res %>%
   group_by(N, bad, model, select, thetacond) %>%
-  summarize(bias = mean(thetadiff), rmse = sqrt(mean(thetadiff2^2)), meanse = mean(se)) %>%
+  summarize(bias = mean(thetadiff), rmse = sqrt(mean(thetadiff^2)), meanse = mean(se)) %>% # *** LMF - think I caught a typo here with the RMSEs (originally was thetadiff2^2 instead of thetadiff^2)
   mutate(linetype = paste0("N = ", N, ", ", bad, " bad items"))
 
 # for random draws from standard normal
@@ -116,17 +116,27 @@ ggplot(recovery %>% filter(thetacond == "normal01"),
 # across the theta continuum
 # *** CFF - report this one? (say something about how the selection method did not seem to make a big difference?)
 # Do we want to report bias or meanse?
+# *** LMF - these are tricky - bias is interesting, but confounded with the use of the EAP estimator
+#         - I like the idea of meanse, but we would have to be convinced that meanse reflects true improvements in precision rather than biased estimates of the standard error
 # *** CFF - some summary on whether MPWI and FI differs much from KL? Or put MPWI and FI in supplement?
 # If motivation is to use MP w/ existing item selection algorithm (likely FI or MPWI for operational testing), then there should be some
 # mention of it, even if just to say it does just as well as KL
 # Probably omit KLL and KLP, as these only show up in catR (not sure if published) and didn't do great anyway. But, mention in-text or footnote.
+# *** LMF - I agree that the rsme plot is probably the best illustration at this point
+#         - I also agree with the suggestion to drop the KL results at this point
 ggplot(recovery %>% filter(select == "KL" & thetacond != "normal01"),
        aes(thetacond, rmse, group = model, color = model)) + 
   geom_point() + geom_line() + facet_wrap(~linetype)
 
 # *** CFF - report this one? Though I have some trouble making good sense of this one
+# *** LMF - maybe skip this one - it mostly shows the bias of the EAP estimator rather than any meaningful group differences
+#         - absolute bias (new) is a bit more interpretable if we really want to show bias
 ggplot(recovery %>% filter(select == "KL" & thetacond != "normal01"),
        aes(thetacond, bias, group = model, color = model)) + 
+  geom_point() + geom_line() + facet_wrap(~linetype) + geom_hline(yintercept = 0)
+
+ggplot(recovery %>% filter(select == "KL" & thetacond != "normal01"),
+       aes(thetacond, abs(bias), group = model, color = model)) + 
   geom_point() + geom_line() + facet_wrap(~linetype) + geom_hline(yintercept = 0)
 
 ggplot(recovery %>% filter(select == "KL" & thetacond != "normal01"),
@@ -197,6 +207,8 @@ ggplot(recovery2 %>% filter(select == "KLL" & thetacond != "normal01" & model !=
 #### Patterns of Bad Items Administered ####
 
 # CFF - should we report anything from this section?
+# *** LMF - could be an interesting argument to add in that SA makes better use of these "bad" items than KS
+#         - but if the paper is getting long, this would be a good candidate for something to cut
 
 # add character column of reference item bank
 res <- res %>% 
@@ -229,6 +241,8 @@ recovery3 <- res %>%
   summarize(bias = mean(thetadiff), rmse = sqrt(mean(thetadiff2^2)), meanse = mean(se), prop_nbad = mean(nbad_admin) / 25) %>%
   mutate(bank = paste0("N = ", N, ", ", bad, " bad items"))
 
+
+# *** LMF - if we report anything from this section, I'd suggest the following plot or the one after
 ggplot(recovery3 %>% filter(thetacond == "normal01"),
        aes(model, prop_nbad, group = select, color = select)) + 
   geom_point() + geom_line() + facet_wrap(~bank)
@@ -236,7 +250,7 @@ ggplot(recovery3 %>% filter(thetacond == "normal01"),
 # bad items are less likely to be administered if item pars are estimated than if true item pars are used
 # SA is more likely, in most cases, to make use of bad items
 
-ggplot(recovery3 %>% filter(select == "KL" & thetacond != "normal01"),
+ggplot(recovery3 %>% filter(select == "FI" & thetacond != "normal01"),
        aes(thetacond, prop_nbad, group = model, color = model)) + 
   geom_point() + geom_line() + facet_wrap(~bank)
 
@@ -483,6 +497,7 @@ RIMSE_res2 <- rbind(data.frame(bank = "n100N1000bad30", model = "2PL", bad = tru
 
 # Looks consistent with prior research. KS doesn't do so well when true model is well-behaved
 # *** CFF Report this one?
+# *** LMF - this looks good to me
 ggplot(RIMSE_res2, aes(bad, RIMSE_p, fill = model)) + 
   geom_boxplot(outlier.shape = NA) + lims(y = c(0, .35)) + facet_wrap(~bank)
 #############################
@@ -572,6 +587,11 @@ testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100
 # *** CFF - report a plot of this one?
 # Is there an in-text summary we can provide?
 ggplot(testinfo_dat2 %>% filter(infotype == "total"), aes(theta, info, col = model)) + facet_wrap(~itembank) + geom_path() #hmm. I imagine there's a way to compute a discrepancy between true and estimated
+
+# *** LMF - Waller and I (2017) computed a RIMSE-like measure for info recovery - could easily genearlize to test info (perhaps divide by #items)
+#           hmm....although this is interesting, I wonder if showing such wonky information functions would
+#           be easy for reviewers to criticize (and would warrant a fair amount of extra explanation/justification)
+
 #######################
 
 ## look at the variety of items administered for each model condition
@@ -613,6 +633,7 @@ sa_n100N3000bad70$nadmin <- res %>% filter(ni == 100, N == 3000, bad == 70, mode
 
 # count the number of items never administerd
 # *** CFF - if space, some in-text description of item exposure?
+# *** LMF - this would be easy enough to do - the "problem" is that KS apparently is better at using all items in the item bank than other methods
 sum(true_n100N1000bad30$nadmin == 0)
 sum(ks_n100N1000bad30$nadmin == 0)
 sum(mod0_n100N1000bad30$nadmin == 0)
