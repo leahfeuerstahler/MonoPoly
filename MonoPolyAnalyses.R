@@ -699,10 +699,12 @@ ggplot(res, aes(model, nBest)) + geom_boxplot() ## interesting - SA performs clo
 
 aggregate(nBest ~ model, data=res, mean)
 # *** CFF - Report this? for normal01? Mention collapsing across conditions?
+# *** LMF - Sure! It seems simple enough to explain, so that it won't overly complicate the paper
 aggregate(nBest ~ model + thetacond, data=res%>%filter(thetacond=="normal01"), mean) 
 
 ggplot(res, aes(select, nBest)) + geom_boxplot() # MPWI isn't too bad
 # *** CFF - numerical summary of this?
+# *** LMF - agreed, for same reason as above
 aggregate(nBest ~ select, data=res%>%filter(thetacond=="normal01"), mean) # report this. Mention collapsing across conditions?
 
 # Looks like SA is better when there's lots of bad items
@@ -715,5 +717,6 @@ ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==1000), aes(bad, nB
 ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==3000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
 
 # *** CFF - Report these? Only ones that have KS in them
+# *** LMF - I'd less crazy about this one - a lot more complicated to interpret, and the patterns are difficult to explain (e.g., why does k0's relative performance vary so much? perhaps more noise than signal here)
 ggplot(res %>% filter(select=="KL"&thetacond!="normal01"&N==1000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
 ggplot(res %>% filter(select=="KL"&thetacond!="normal01"&N==3000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
