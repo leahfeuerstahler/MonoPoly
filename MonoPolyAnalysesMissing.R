@@ -9,7 +9,7 @@ library(rpf)
 ### CFF - results I wonder if we should report have three asterisks: ***
 #### Complete Data Results - Read in Data ####
 
-res <- read_table2(file="Results/CompleteResults.txt")
+res <- read_table2(file="Results/MissingResults.txt")
 
 ## fix up quote problems
 
@@ -29,64 +29,64 @@ res <- res %>%
 ## read in true and estimated item parameters
 
 # true item parameters
-true_n100N1000bad30 <- read_table2(file = "Results/trueitems_n100N1000bad30")
-true_n100N1000bad70 <- read_table2(file = "Results/trueitems_n100N1000bad70")
-true_n100N3000bad30 <- read_table2(file = "Results/trueitems_n100N3000bad30")
-true_n100N3000bad70 <- read_table2(file = "Results/trueitems_n100N3000bad70")
-colnames(true_n100N1000bad30) <- gsub("\"", "", colnames(true_n100N1000bad30))
-colnames(true_n100N1000bad70) <- gsub("\"", "", colnames(true_n100N1000bad70))
-colnames(true_n100N3000bad30) <- gsub("\"", "", colnames(true_n100N3000bad30))
-colnames(true_n100N3000bad70) <- gsub("\"", "", colnames(true_n100N3000bad70))
+true_n200N5000bad30 <- read_table2(file = "Results/trueitems_n200N5000bad30")
+true_n200N5000bad70 <- read_table2(file = "Results/trueitems_n200N5000bad70")
+true_n200N10000bad30 <- read_table2(file = "Results/trueitems_n200N10000bad30")
+true_n200N10000bad70 <- read_table2(file = "Results/trueitems_n200N10000bad70")
+colnames(true_n200N5000bad30) <- gsub("\"", "", colnames(true_n200N5000bad30))
+colnames(true_n200N5000bad70) <- gsub("\"", "", colnames(true_n200N5000bad70))
+colnames(true_n200N10000bad30) <- gsub("\"", "", colnames(true_n200N10000bad30))
+colnames(true_n200N10000bad70) <- gsub("\"", "", colnames(true_n200N10000bad70))
 
 # add "bad" indicator
-true_n100N1000bad30 <- true_n100N1000bad30 %>% mutate(bad = !is.na(p2))
-true_n100N1000bad70 <- true_n100N1000bad70 %>% mutate(bad = !is.na(p2))
-true_n100N3000bad30 <- true_n100N3000bad30 %>% mutate(bad = !is.na(p2))
-true_n100N3000bad70 <- true_n100N3000bad70 %>% mutate(bad = !is.na(p2))
+true_n200N5000bad30 <- true_n200N5000bad30 %>% mutate(bad = !is.na(p2))
+true_n200N5000bad70 <- true_n200N5000bad70 %>% mutate(bad = !is.na(p2))
+true_n200N10000bad30 <- true_n200N10000bad30 %>% mutate(bad = !is.na(p2))
+true_n200N10000bad70 <- true_n200N10000bad70 %>% mutate(bad = !is.na(p2))
 
-# KS
-ks_n100N1000bad30 <- read_table2(file = "Results/ksresults_n100N1000bad30")
-ks_n100N1000bad70 <- read_table2(file = "Results/ksresults_n100N1000bad70")
-ks_n100N3000bad30 <- read_table2(file = "Results/ksresults_n100N3000bad30")
-ks_n100N3000bad70 <- read_table2(file = "Results/ksresults_n100N3000bad70")
-colnames(ks_n100N1000bad30) <- gsub("\"", "", colnames(ks_n100N1000bad30))
-colnames(ks_n100N1000bad70) <- gsub("\"", "", colnames(ks_n100N1000bad70))
-colnames(ks_n100N3000bad30) <- gsub("\"", "", colnames(ks_n100N3000bad30))
-colnames(ks_n100N3000bad70) <- gsub("\"", "", colnames(ks_n100N3000bad70))
-ks_n100N1000bad30 <- ks_n100N1000bad30 %>% filter(OCC2 == 1)
-ks_n100N1000bad70 <- ks_n100N1000bad70 %>% filter(OCC2 == 1)
-ks_n100N3000bad30 <- ks_n100N3000bad30 %>% filter(OCC2 == 1)
-ks_n100N3000bad70 <- ks_n100N3000bad70 %>% filter(OCC2 == 1)
+# KS - not present in missing data analysis
+#ks_n200N5000bad30 <- read_table2(file = "Results/ksresults_n200N5000bad30")
+#ks_n200N5000bad70 <- read_table2(file = "Results/ksresults_n200N5000bad70")
+#ks_n200N10000bad30 <- read_table2(file = "Results/ksresults_n200N10000bad30")
+#ks_n200N10000bad70 <- read_table2(file = "Results/ksresults_n200N10000bad70")
+#colnames(ks_n200N5000bad30) <- gsub("\"", "", colnames(ks_n200N5000bad30))
+#colnames(ks_n200N5000bad70) <- gsub("\"", "", colnames(ks_n200N5000bad70))
+#colnames(ks_n200N10000bad30) <- gsub("\"", "", colnames(ks_n200N10000bad30))
+#colnames(ks_n200N10000bad70) <- gsub("\"", "", colnames(ks_n200N10000bad70))
+#ks_n200N5000bad30 <- ks_n200N5000bad30 %>% filter(OCC2 == 1)
+#ks_n200N5000bad70 <- ks_n200N5000bad70 %>% filter(OCC2 == 1)
+#ks_n200N10000bad30 <- ks_n200N10000bad30 %>% filter(OCC2 == 1)
+#ks_n200N10000bad70 <- ks_n200N10000bad70 %>% filter(OCC2 == 1)
 
 # 2PL
-mod0_n100N1000bad30 <- as_tibble(t(read_table2(file = "Results/mod0values_n100N1000bad30")))
-mod0_n100N1000bad70 <- as_tibble(t(read_table2(file = "Results/mod0values_n100N1000bad70")))
-mod0_n100N3000bad30 <- as_tibble(t(read_table2(file = "Results/mod0values_n100N3000bad30")))
-mod0_n100N3000bad70 <- as_tibble(t(read_table2(file = "Results/mod0values_n100N3000bad70")))
-colnames(mod0_n100N1000bad30) <- colnames(mod0_n100N1000bad70) <- 
-  colnames(mod0_n100N3000bad30) <- colnames(mod0_n100N3000bad70) <- c("omega", "xi")
+mod0_n200N5000bad30 <- as_tibble(t(read_table2(file = "Results/mod0values_n200N5000bad30")))
+mod0_n200N5000bad70 <- as_tibble(t(read_table2(file = "Results/mod0values_n200N5000bad70")))
+mod0_n200N10000bad30 <- as_tibble(t(read_table2(file = "Results/mod0values_n200N10000bad30")))
+mod0_n200N10000bad70 <- as_tibble(t(read_table2(file = "Results/mod0values_n200N10000bad70")))
+colnames(mod0_n200N5000bad30) <- colnames(mod0_n200N5000bad70) <- 
+  colnames(mod0_n200N10000bad30) <- colnames(mod0_n200N10000bad70) <- c("omega", "xi")
 
 # SA
-sa_n100N1000bad30 <- as_tibble(t(read_table2(file = "Results/savalues_n100N1000bad30")))
-sa_n100N1000bad70 <- as_tibble(t(read_table2(file = "Results/savalues_n100N1000bad70")))
-sa_n100N3000bad30 <- as_tibble(t(read_table2(file = "Results/savalues_n100N3000bad30")))
-sa_n100N3000bad70 <- as_tibble(t(read_table2(file = "Results/savalues_n100N3000bad70")))
-colnames(sa_n100N1000bad30) <- colnames(sa_n100N1000bad70) <- 
-  colnames(sa_n100N3000bad30) <- c("omega", "xi", "alpha1", "tau1", "alpha2", "tau2")
-colnames(sa_n100N3000bad70) <- c("omega", "xi", "alpha1", "tau1", "alpha2", "tau2", "alpha3", "tau3")
+sa_n200N5000bad30 <- as_tibble(t(read_table2(file = "Results/savalues_n200N5000bad30")))
+sa_n200N5000bad70 <- as_tibble(t(read_table2(file = "Results/savalues_n200N5000bad70")))
+sa_n200N10000bad30 <- as_tibble(t(read_table2(file = "Results/savalues_n200N10000bad30")))
+sa_n200N10000bad70 <- as_tibble(t(read_table2(file = "Results/savalues_n200N10000bad70")))
+colnames(sa_n200N5000bad30) <- colnames(sa_n200N5000bad70) <- 
+  colnames(sa_n200N10000bad30) <- c("omega", "xi", "alpha1", "tau1", "alpha2", "tau2")
+colnames(sa_n200N10000bad70) <- c("omega", "xi", "alpha1", "tau1", "alpha2", "tau2", "alpha3", "tau3")
 
 # save q of SA items and 2PL items (q = 0)
-sa_n100N1000bad30 <- sa_n100N1000bad30 %>% mutate(q = as.numeric(!is.na(alpha1)) + as.numeric(!is.na(alpha2)))
-sa_n100N1000bad70 <- sa_n100N1000bad70 %>% mutate(q = as.numeric(!is.na(alpha1)) + as.numeric(!is.na(alpha2)))
-sa_n100N3000bad30 <- sa_n100N3000bad30 %>% mutate(q = as.numeric(!is.na(alpha1)) + as.numeric(!is.na(alpha2)))
-sa_n100N3000bad70 <- sa_n100N3000bad70 %>% mutate(q = as.numeric(!is.na(alpha1)) + as.numeric(!is.na(alpha2)) + as.numeric(!is.na(alpha3)))
-mod0_n100N1000bad30$q <- mod0_n100N1000bad70$q <- mod0_n100N3000bad30$q <- mod0_n100N3000bad70$q <- 0
+sa_n200N5000bad30 <- sa_n200N5000bad30 %>% mutate(q = as.numeric(!is.na(alpha1)) + as.numeric(!is.na(alpha2)))
+sa_n200N5000bad70 <- sa_n200N5000bad70 %>% mutate(q = as.numeric(!is.na(alpha1)) + as.numeric(!is.na(alpha2)))
+sa_n200N10000bad30 <- sa_n200N10000bad30 %>% mutate(q = as.numeric(!is.na(alpha1)) + as.numeric(!is.na(alpha2)))
+sa_n200N10000bad70 <- sa_n200N10000bad70 %>% mutate(q = as.numeric(!is.na(alpha1)) + as.numeric(!is.na(alpha2)) + as.numeric(!is.na(alpha3)))
+mod0_n200N5000bad30$q <- mod0_n200N5000bad70$q <- mod0_n200N10000bad30$q <- mod0_n200N10000bad70$q <- 0
 
 ## table the relationship between bad items and SA q
-table(true_n100N1000bad30$bad, sa_n100N1000bad30$q)
-table(true_n100N1000bad70$bad, sa_n100N1000bad70$q)
-table(true_n100N3000bad30$bad, sa_n100N3000bad30$q)
-table(true_n100N3000bad70$bad, sa_n100N3000bad70$q)
+table(true_n200N5000bad30$bad, sa_n200N5000bad30$q)
+table(true_n200N5000bad70$bad, sa_n200N5000bad70$q)
+table(true_n200N10000bad30$bad, sa_n200N10000bad30$q)
+table(true_n200N10000bad70$bad, sa_n200N10000bad70$q)
 
 #### Visualize Biases and Standard Errors ####
 res <- res %>%
@@ -149,10 +149,10 @@ res2 <- res %>% select(ni:truetheta, thetacond) %>%
   spread(model, thetaest)
 
 res2 <- res2 %>% mutate(thetadiff_k0 = thetaest_k0 - thetaest_true,
-                        thetadiff_KS = thetaest_KS - thetaest_true,
+                        #thetadiff_KS = thetaest_KS - thetaest_true,
                         thetadiff_SA = thetaest_SA - thetaest_true,
                         thetadiff2_k0 = thetadiff_k0^2,
-                        thetadiff2_KS = thetadiff_KS^2,
+                        #thetadiff2_KS = thetadiff_KS^2,
                         thetadiff2_SA = thetadiff_SA^2)
 
 res3 <- res2 %>% select(ni:thetaest_true) %>%
@@ -185,7 +185,8 @@ recovery2 <- res2 %>%
   summarize(rel_bias = mean(thetadiff), rmsd = sqrt(mean(thetadiff2^2))) %>%
   mutate(linetype = paste0("N = ", N, ", ", bad, " bad items"))
 
-# for random draws from standard normal - in some conditions, SA seems closest to the true results 
+# for random draws from standard normal
+# with complete data, there is some note about SA being close to true. I don't see that here, though results in general are difficult to discern
 ggplot(recovery2 %>% filter(thetacond == "normal01" & model != "true"),
        aes(model, rmsd, group = select, color = select)) + 
   geom_point() + geom_line() + facet_wrap(~linetype)
@@ -195,11 +196,11 @@ ggplot(recovery2 %>% filter(thetacond == "normal01" & model != "true"),
   geom_point() + geom_line() + facet_wrap(~linetype) + geom_hline(yintercept = 0)
 
 # across the theta continuum
-ggplot(recovery2 %>% filter(select == "KLL" & thetacond != "normal01" & model != "true"),
+ggplot(recovery2 %>% filter(select == "KL" & thetacond != "normal01" & model != "true"),
        aes(thetacond, rmsd, group = model, color = model)) + 
   geom_point() + geom_line() + facet_wrap(~linetype)
 
-ggplot(recovery2 %>% filter(select == "KLL" & thetacond != "normal01" & model != "true"),
+ggplot(recovery2 %>% filter(select == "KL" & thetacond != "normal01" & model != "true"),
        aes(thetacond, rel_bias, group = model, color = model)) + 
   geom_point() + geom_line() + facet_wrap(~linetype) + geom_hline(yintercept = 0)
 
@@ -229,11 +230,13 @@ cor(res$se, res$nbad_admin)
 ggplot(res, aes(factor(nbad_admin), thetadiff, fill = model)) + geom_boxplot(outlier.shape = NA) + 
   geom_hline(yintercept = 0) + lims(y = c(-1.5, 1.5)) + facet_wrap(~model)
 
+# CFF - woah is there an outlier in there somewhere?
+# what is the warning message about non-finite values?
 ggplot(res, aes(factor(nbad_admin), thetadiff2, fill = model)) + geom_boxplot(outlier.shape = NA) + 
   lims(y = c(0, .75)) + facet_wrap(~model)
 
-
-# the more bad items administered, the lower the standard errors
+# the more bad items administered, the lower the standard errors?
+# CFF -more variation in standard errors?
 ggplot(res, aes(factor(nbad_admin), se)) + geom_boxplot()
 
 recovery3 <- res %>%
@@ -243,6 +246,7 @@ recovery3 <- res %>%
 
 
 # *** LMF - if we report anything from this section, I'd suggest the following plot or the one after
+# Sure, either one looks good to me
 ggplot(recovery3 %>% filter(thetacond == "normal01"),
        aes(model, prop_nbad, group = select, color = select)) + 
   geom_point() + geom_line() + facet_wrap(~bank)
@@ -251,6 +255,10 @@ ggplot(recovery3 %>% filter(thetacond == "normal01"),
 # SA is more likely, in most cases, to make use of bad items
 
 ggplot(recovery3 %>% filter(select == "FI" & thetacond != "normal01"),
+       aes(thetacond, prop_nbad, group = model, color = model)) + 
+  geom_point() + geom_line() + facet_wrap(~bank)
+
+ggplot(recovery3 %>% filter(select == "KL" & thetacond != "normal01"),
        aes(thetacond, prop_nbad, group = model, color = model)) + 
   geom_point() + geom_line() + facet_wrap(~bank)
 
@@ -428,41 +436,41 @@ rimse.info <- function(true.ib, mp.ib, qpts, wts){
 qpts <- seq(-5, 5, by = .1)
 wts <- dnorm(qpts)
 
-mod0_n100N1000bad30$RIMSE_p <- rimse.trace(true_n100N1000bad30, mod0_n100N1000bad30, qpts, wts) * 100
-mod0_n100N1000bad70$RIMSE_p <- rimse.trace(true_n100N1000bad70, mod0_n100N1000bad70, qpts, wts) * 100
-mod0_n100N3000bad30$RIMSE_p <- rimse.trace(true_n100N3000bad30, mod0_n100N3000bad30, qpts, wts) * 100
-mod0_n100N3000bad70$RIMSE_p <- rimse.trace(true_n100N3000bad70, mod0_n100N3000bad70, qpts, wts) * 100
+mod0_n200N5000bad30$RIMSE_p <- rimse.trace(true_n200N5000bad30, mod0_n200N5000bad30, qpts, wts) * 100
+mod0_n200N5000bad70$RIMSE_p <- rimse.trace(true_n200N5000bad70, mod0_n200N5000bad70, qpts, wts) * 100
+mod0_n200N10000bad30$RIMSE_p <- rimse.trace(true_n200N10000bad30, mod0_n200N10000bad30, qpts, wts) * 100
+mod0_n200N10000bad70$RIMSE_p <- rimse.trace(true_n200N10000bad70, mod0_n200N10000bad70, qpts, wts) * 100
 
-sa_n100N1000bad30$RIMSE_p <- rimse.trace(true_n100N1000bad30, sa_n100N1000bad30, qpts, wts) * 100
-sa_n100N1000bad70$RIMSE_p <- rimse.trace(true_n100N1000bad70, sa_n100N1000bad70, qpts, wts) * 100
-sa_n100N3000bad30$RIMSE_p <- rimse.trace(true_n100N3000bad30, sa_n100N3000bad30, qpts, wts) * 100
-sa_n100N3000bad70$RIMSE_p <- rimse.trace(true_n100N3000bad70, sa_n100N3000bad70, qpts, wts) * 100
+sa_n200N5000bad30$RIMSE_p <- rimse.trace(true_n200N5000bad30, sa_n200N5000bad30, qpts, wts) * 100
+sa_n200N5000bad70$RIMSE_p <- rimse.trace(true_n200N5000bad70, sa_n200N5000bad70, qpts, wts) * 100
+sa_n200N10000bad30$RIMSE_p <- rimse.trace(true_n200N10000bad30, sa_n200N10000bad30, qpts, wts) * 100
+sa_n200N10000bad70$RIMSE_p <- rimse.trace(true_n200N10000bad70, sa_n200N10000bad70, qpts, wts) * 100
 
 # RIMSEs * 100
-mod0_n100N1000bad30$RIMSE_i <- rimse.info(true_n100N1000bad30, mod0_n100N1000bad30, qpts, wts) * 100
-mod0_n100N1000bad70$RIMSE_i <- rimse.info(true_n100N1000bad70, mod0_n100N1000bad70, qpts, wts) * 100
-mod0_n100N3000bad30$RIMSE_i <- rimse.info(true_n100N3000bad30, mod0_n100N3000bad30, qpts, wts) * 100
-mod0_n100N3000bad70$RIMSE_i <- rimse.info(true_n100N3000bad70, mod0_n100N3000bad70, qpts, wts) * 100
+mod0_n200N5000bad30$RIMSE_i <- rimse.info(true_n200N5000bad30, mod0_n200N5000bad30, qpts, wts) * 100
+mod0_n200N5000bad70$RIMSE_i <- rimse.info(true_n200N5000bad70, mod0_n200N5000bad70, qpts, wts) * 100
+mod0_n200N10000bad30$RIMSE_i <- rimse.info(true_n200N10000bad30, mod0_n200N10000bad30, qpts, wts) * 100
+mod0_n200N10000bad70$RIMSE_i <- rimse.info(true_n200N10000bad70, mod0_n200N10000bad70, qpts, wts) * 100
 
-sa_n100N1000bad30$RIMSE_i <- rimse.info(true_n100N1000bad30, sa_n100N1000bad30, qpts, wts) * 100
-sa_n100N1000bad70$RIMSE_i <- rimse.info(true_n100N1000bad70, sa_n100N1000bad70, qpts, wts) * 100
-sa_n100N3000bad30$RIMSE_i <- rimse.info(true_n100N3000bad30, sa_n100N3000bad30, qpts, wts) * 100
-sa_n100N3000bad70$RIMSE_i <- rimse.info(true_n100N3000bad70, sa_n100N3000bad70, qpts, wts) * 100
+sa_n200N5000bad30$RIMSE_i <- rimse.info(true_n200N5000bad30, sa_n200N5000bad30, qpts, wts) * 100
+sa_n200N5000bad70$RIMSE_i <- rimse.info(true_n200N5000bad70, sa_n200N5000bad70, qpts, wts) * 100
+sa_n200N10000bad30$RIMSE_i <- rimse.info(true_n200N10000bad30, sa_n200N10000bad30, qpts, wts) * 100
+sa_n200N10000bad70$RIMSE_i <- rimse.info(true_n200N10000bad70, sa_n200N10000bad70, qpts, wts) * 100
 
 ## CFF: added KS here
-ks_n100N1000bad30$RIMSE_p  <- rimse.kstrace(true_n100N1000bad30, ks_n100N1000bad30)*100
-ks_n100N1000bad70$RIMSE_p  <- rimse.kstrace(true_n100N1000bad70, ks_n100N1000bad70)*100
-ks_n100N3000bad30$RIMSE_p  <- rimse.kstrace(true_n100N3000bad30, ks_n100N3000bad30)*100
-ks_n100N3000bad70$RIMSE_p  <- rimse.kstrace(true_n100N3000bad70, ks_n100N3000bad70)*100
+#ks_n200N5000bad30$RIMSE_p  <- rimse.kstrace(true_n200N5000bad30, ks_n200N5000bad30)*100
+#ks_n200N5000bad70$RIMSE_p  <- rimse.kstrace(true_n200N5000bad70, ks_n200N5000bad70)*100
+#ks_n200N10000bad30$RIMSE_p  <- rimse.kstrace(true_n200N10000bad30, ks_n200N10000bad30)*100
+#ks_n200N10000bad70$RIMSE_p  <- rimse.kstrace(true_n200N10000bad70, ks_n200N10000bad70)*100
 
-RIMSE_res <- rbind(data.frame(bank = "n100N1000bad30", model = "2PL", bad = true_n100N1000bad30$bad, mod0_n100N1000bad30[, c("q", "RIMSE_p", "RIMSE_i")]),
-                   data.frame(bank = "n100N1000bad70", model = "2PL", bad = true_n100N1000bad70$bad, mod0_n100N1000bad70[, c("q", "RIMSE_p", "RIMSE_i")]),
-                   data.frame(bank = "n100N3000bad30", model = "2PL", bad = true_n100N3000bad30$bad, mod0_n100N3000bad30[, c("q", "RIMSE_p", "RIMSE_i")]),
-                   data.frame(bank = "n100N3000bad70", model = "2PL", bad = true_n100N3000bad70$bad, mod0_n100N3000bad70[, c("q", "RIMSE_p", "RIMSE_i")]),
-                   data.frame(bank = "n100N1000bad30", model = "SA", bad = true_n100N1000bad30$bad, sa_n100N1000bad30[, c("q", "RIMSE_p", "RIMSE_i")]),
-                   data.frame(bank = "n100N1000bad70", model = "SA", bad = true_n100N1000bad70$bad, sa_n100N1000bad70[, c("q", "RIMSE_p", "RIMSE_i")]),
-                   data.frame(bank = "n100N3000bad30", model = "SA", bad = true_n100N3000bad30$bad, sa_n100N3000bad30[, c("q", "RIMSE_p", "RIMSE_i")]),
-                   data.frame(bank = "n100N3000bad70", model = "SA", bad = true_n100N3000bad70$bad, sa_n100N3000bad70[, c("q", "RIMSE_p", "RIMSE_i")]))
+RIMSE_res <- rbind(data.frame(bank = "n200N5000bad30", model = "2PL", bad = true_n200N5000bad30$bad, mod0_n200N5000bad30[, c("q", "RIMSE_p", "RIMSE_i")]),
+                   data.frame(bank = "n200N5000bad70", model = "2PL", bad = true_n200N5000bad70$bad, mod0_n200N5000bad70[, c("q", "RIMSE_p", "RIMSE_i")]),
+                   data.frame(bank = "n200N10000bad30", model = "2PL", bad = true_n200N10000bad30$bad, mod0_n200N10000bad30[, c("q", "RIMSE_p", "RIMSE_i")]),
+                   data.frame(bank = "n200N10000bad70", model = "2PL", bad = true_n200N10000bad70$bad, mod0_n200N10000bad70[, c("q", "RIMSE_p", "RIMSE_i")]),
+                   data.frame(bank = "n200N5000bad30", model = "SA", bad = true_n200N5000bad30$bad, sa_n200N5000bad30[, c("q", "RIMSE_p", "RIMSE_i")]),
+                   data.frame(bank = "n200N5000bad70", model = "SA", bad = true_n200N5000bad70$bad, sa_n200N5000bad70[, c("q", "RIMSE_p", "RIMSE_i")]),
+                   data.frame(bank = "n200N10000bad30", model = "SA", bad = true_n200N10000bad30$bad, sa_n200N10000bad30[, c("q", "RIMSE_p", "RIMSE_i")]),
+                   data.frame(bank = "n200N10000bad70", model = "SA", bad = true_n200N10000bad70$bad, sa_n200N10000bad70[, c("q", "RIMSE_p", "RIMSE_i")]))
 
 # relationship between recovery and bad items
 ggplot(RIMSE_res, aes(bad, RIMSE_p, fill = model)) + 
@@ -481,44 +489,46 @@ ggplot(RIMSE_res %>% filter(model == "SA"), aes(factor(q), RIMSE_i, fill = facto
   facet_wrap(~bank)
 
 #############################
-# CFF - added KS here
-RIMSE_res2 <- rbind(data.frame(bank = "n100N1000bad30", model = "2PL", bad = true_n100N1000bad30$bad, mod0_n100N1000bad30[, c("RIMSE_p")]),
-                    data.frame(bank = "n100N1000bad70", model = "2PL", bad = true_n100N1000bad70$bad, mod0_n100N1000bad70[, c("RIMSE_p")]),
-                    data.frame(bank = "n100N3000bad30", model = "2PL", bad = true_n100N3000bad30$bad, mod0_n100N3000bad30[, c("RIMSE_p")]),
-                    data.frame(bank = "n100N3000bad70", model = "2PL", bad = true_n100N3000bad70$bad, mod0_n100N3000bad70[, c("RIMSE_p")]),
-                    data.frame(bank = "n100N1000bad30", model = "SA", bad = true_n100N1000bad30$bad, sa_n100N1000bad30[, c("RIMSE_p")]),
-                    data.frame(bank = "n100N1000bad70", model = "SA", bad = true_n100N1000bad70$bad, sa_n100N1000bad70[, c("RIMSE_p")]),
-                    data.frame(bank = "n100N3000bad30", model = "SA", bad = true_n100N3000bad30$bad, sa_n100N3000bad30[, c("RIMSE_p")]),
-                    data.frame(bank = "n100N3000bad70", model = "SA", bad = true_n100N3000bad70$bad, sa_n100N3000bad70[, c("RIMSE_p")]),
-                    data.frame(bank = "n100N1000bad30", model = "KS", bad = true_n100N1000bad30$bad, ks_n100N1000bad30[, c("RIMSE_p")]),
-                    data.frame(bank = "n100N1000bad70", model = "KS", bad = true_n100N1000bad70$bad, ks_n100N1000bad70[, c("RIMSE_p")]),
-                    data.frame(bank = "n100N3000bad30", model = "KS", bad = true_n100N3000bad30$bad, ks_n100N3000bad30[, c("RIMSE_p")]),
-                    data.frame(bank = "n100N3000bad70", model = "KS", bad = true_n100N3000bad70$bad, ks_n100N3000bad70[, c("RIMSE_p")]))
+RIMSE_res2 <- rbind(data.frame(bank = "n200N5000bad30", model = "2PL", bad = true_n200N5000bad30$bad, mod0_n200N5000bad30[, c("RIMSE_p")]),
+                    data.frame(bank = "n200N5000bad70", model = "2PL", bad = true_n200N5000bad70$bad, mod0_n200N5000bad70[, c("RIMSE_p")]),
+                    data.frame(bank = "n200N10000bad30", model = "2PL", bad = true_n200N10000bad30$bad, mod0_n200N10000bad30[, c("RIMSE_p")]),
+                    data.frame(bank = "n200N10000bad70", model = "2PL", bad = true_n200N10000bad70$bad, mod0_n200N10000bad70[, c("RIMSE_p")]),
+                    data.frame(bank = "n200N5000bad30", model = "SA", bad = true_n200N5000bad30$bad, sa_n200N5000bad30[, c("RIMSE_p")]),
+                    data.frame(bank = "n200N5000bad70", model = "SA", bad = true_n200N5000bad70$bad, sa_n200N5000bad70[, c("RIMSE_p")]),
+                    data.frame(bank = "n200N10000bad30", model = "SA", bad = true_n200N10000bad30$bad, sa_n200N10000bad30[, c("RIMSE_p")]),
+                    data.frame(bank = "n200N10000bad70", model = "SA", bad = true_n200N10000bad70$bad, sa_n200N10000bad70[, c("RIMSE_p")]))
+                    #data.frame(bank = "n200N5000bad30", model = "KS", bad = true_n200N5000bad30$bad, ks_n200N5000bad30[, c("RIMSE_p")]),
+                    #data.frame(bank = "n200N5000bad70", model = "KS", bad = true_n200N5000bad70$bad, ks_n200N5000bad70[, c("RIMSE_p")]),
+                    #data.frame(bank = "n200N10000bad30", model = "KS", bad = true_n200N10000bad30$bad, ks_n200N10000bad30[, c("RIMSE_p")]),
+                    #data.frame(bank = "n200N10000bad70", model = "KS", bad = true_n200N10000bad70$bad, ks_n200N10000bad70[, c("RIMSE_p")]))
 
-# Looks consistent with prior research. KS doesn't do so well when true model is well-behaved
 # *** CFF Report this one?
 # *** LMF - this looks good to me
+# *** CFF - looks like SA does well for "bad" items in all but N=5000 bad=30 condition?
+#           similar, though slightly worse for standard items
 ggplot(RIMSE_res2, aes(bad, RIMSE_p, fill = model)) + 
   geom_boxplot(outlier.shape = NA) + lims(y = c(0, .35)) + facet_wrap(~bank)
 #############################
 
 ## do bad items provide more true information than non-bad items?
-theta <- seq(-3, 3, by = .01)
-testinfo_dat <- data.frame(theta = theta, itembank = "n100N1000bad30", nbad = 30, nit_info = 100, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n100N1000bad30)))
-testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n100N1000bad30", nbad = 30, nit_info = 30, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n100N1000bad30)[, true_n100N1000bad30$bad])))
-testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n100N1000bad30", nbad = 30, nit_info = 70, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n100N1000bad30)[, !true_n100N1000bad30$bad])))
+#theta <- seq(-3, 3, by = .01)
+theta <- qpts #seq(-3, 3, by = .01) # If numerical summary, then same grid as qpts?
 
-testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n100N1000bad70", nbad = 70, nit_info = 100, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n100N1000bad70))))
-testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n100N1000bad70", nbad = 70, nit_info = 70, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n100N1000bad70)[, true_n100N1000bad70$bad])))
-testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n100N1000bad70", nbad = 70, nit_info = 30, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n100N1000bad70)[, !true_n100N1000bad70$bad])))
+testinfo_dat <- data.frame(theta = theta, itembank = "n200N5000bad30", nbad = 30, nit_info = 200, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n200N5000bad30)))
+testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n200N5000bad30", nbad = 30, nit_info = 60, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n200N5000bad30)[, true_n200N5000bad30$bad])))
+testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n200N5000bad30", nbad = 30, nit_info = 140, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n200N5000bad30)[, !true_n200N5000bad30$bad])))
 
-testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n100N3000bad30", nbad = 30, nit_info = 100, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n100N3000bad30))))
-testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n100N3000bad30", nbad = 30, nit_info = 30, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n100N3000bad30)[, true_n100N3000bad30$bad])))
-testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n100N3000bad30", nbad = 30, nit_info = 70, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n100N3000bad30)[, !true_n100N3000bad30$bad])))
+testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n200N5000bad70", nbad = 70, nit_info = 200, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n200N5000bad70))))
+testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n200N5000bad70", nbad = 70, nit_info = 140, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n200N5000bad70)[, true_n200N5000bad70$bad])))
+testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n200N5000bad70", nbad = 70, nit_info = 60, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n200N5000bad70)[, !true_n200N5000bad70$bad])))
 
-testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n100N3000bad70", nbad = 70, nit_info = 100, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n100N3000bad70))))
-testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n100N3000bad70", nbad = 70, nit_info = 70, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n100N3000bad70)[, true_n100N3000bad70$bad])))
-testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n100N3000bad70", nbad = 70, nit_info = 30, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n100N3000bad70)[, !true_n100N3000bad70$bad])))
+testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n200N10000bad30", nbad = 30, nit_info = 200, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n200N10000bad30))))
+testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n200N10000bad30", nbad = 30, nit_info = 60, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n200N10000bad30)[, true_n200N10000bad30$bad])))
+testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n200N10000bad30", nbad = 30, nit_info = 140, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n200N10000bad30)[, !true_n200N10000bad30$bad])))
+
+testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n200N10000bad70", nbad = 70, nit_info = 200, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n200N10000bad70))))
+testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n200N10000bad70", nbad = 70, nit_info = 140, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n200N10000bad70)[, true_n200N10000bad70$bad])))
+testinfo_dat <- rbind(testinfo_dat, data.frame(theta = theta, itembank = "n200N10000bad70", nbad = 70, nit_info = 60, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n200N10000bad70)[, !true_n200N10000bad70$bad])))
 
 testinfo_dat <- testinfo_dat %>% mutate(avg_info = info / nit_info, # compute average information
                                         infotype = fct_relevel(infotype, "bad", after = 0)) # reorder to better conform to ggplot's default color scheme
@@ -533,59 +543,60 @@ ggplot(testinfo_dat %>% filter(infotype != "total"), aes(theta, avg_info, col = 
 
 #######################
 # CFF: What about true information vs estimated information (collapsing across type of item) - can we visualize?
-testinfo_dat2 <- data.frame(theta = theta, itembank = "n100N1000bad30", model="true", nbad = 30, nit_info = 100, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n100N1000bad30)))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad30",model="true", nbad = 30, nit_info = 30, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n100N1000bad30)[, true_n100N1000bad30$bad])))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad30",model="true", nbad = 30, nit_info = 70, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n100N1000bad30)[, !true_n100N1000bad30$bad])))
+testinfo_dat2 <- data.frame(theta = theta, itembank = "n200N5000bad30", model="true", nbad = 30, nit_info = 200, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n200N5000bad30)))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad30",model="true", nbad = 30, nit_info = 60, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n200N5000bad30)[, true_n200N5000bad30$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad30",model="true", nbad = 30, nit_info = 140, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n200N5000bad30)[, !true_n200N5000bad30$bad])))
 
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad70",model="true", nbad = 70, nit_info = 100, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n100N1000bad70))))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad70",model="true", nbad = 70, nit_info = 70, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n100N1000bad70)[, true_n100N1000bad70$bad])))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad70",model="true", nbad = 70, nit_info = 30, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n100N1000bad70)[, !true_n100N1000bad70$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad70",model="true", nbad = 70, nit_info = 200, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n200N5000bad70))))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad70",model="true", nbad = 70, nit_info = 140, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n200N5000bad70)[, true_n200N5000bad70$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad70",model="true", nbad = 70, nit_info = 60, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n200N5000bad70)[, !true_n200N5000bad70$bad])))
 
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad30",model="true", nbad = 30, nit_info = 100, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n100N3000bad30))))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad30",model="true", nbad = 30, nit_info = 30, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n100N3000bad30)[, true_n100N3000bad30$bad])))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad30",model="true", nbad = 30, nit_info = 70, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n100N3000bad30)[, !true_n100N3000bad30$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad30",model="true", nbad = 30, nit_info = 200, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n200N10000bad30))))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad30",model="true", nbad = 30, nit_info = 60, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n200N10000bad30)[, true_n200N10000bad30$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad30",model="true", nbad = 30, nit_info = 140, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n200N10000bad30)[, !true_n200N10000bad30$bad])))
 
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad70",model="true", nbad = 70, nit_info = 100, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n100N3000bad70))))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad70",model="true", nbad = 70, nit_info = 70, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n100N3000bad70)[, true_n100N3000bad70$bad])))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad70",model="true", nbad = 70, nit_info = 30, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n100N3000bad70)[, !true_n100N3000bad70$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad70",model="true", nbad = 70, nit_info = 200, infotype = "total", info = rowSums(info.ib.cdf(theta, true_n200N10000bad70))))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad70",model="true", nbad = 70, nit_info = 140, infotype = "bad", info = rowSums(info.ib.cdf(theta, true_n200N10000bad70)[, true_n200N10000bad70$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad70",model="true", nbad = 70, nit_info = 60, infotype = "good", info = rowSums(info.ib.cdf(theta, true_n200N10000bad70)[, !true_n200N10000bad70$bad])))
 
 # add SA
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad30",model="SA", nbad = 30, nit_info = 100, infotype = "total", info = rowSums(info.ib.mp(theta, sa_n100N1000bad30))))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad30",model="SA", nbad = 30, nit_info = 30, infotype = "bad", info = rowSums(info.ib.mp(theta, sa_n100N1000bad30)[, true_n100N1000bad30$bad])))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad30",model="SA", nbad = 30, nit_info = 70, infotype = "good", info = rowSums(info.ib.mp(theta, sa_n100N1000bad30)[, !true_n100N1000bad30$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad30",model="SA", nbad = 30, nit_info = 200, infotype = "total", info = rowSums(info.ib.mp(theta, sa_n200N5000bad30))))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad30",model="SA", nbad = 30, nit_info = 60, infotype = "bad", info = rowSums(info.ib.mp(theta, sa_n200N5000bad30)[, true_n200N5000bad30$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad30",model="SA", nbad = 30, nit_info = 140, infotype = "good", info = rowSums(info.ib.mp(theta, sa_n200N5000bad30)[, !true_n200N5000bad30$bad])))
 
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad70",model="SA", nbad = 70, nit_info = 100, infotype = "total", info = rowSums(info.ib.mp(theta, sa_n100N1000bad70))))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad70",model="SA", nbad = 70, nit_info = 70, infotype = "bad", info = rowSums(info.ib.mp(theta, sa_n100N1000bad70)[, true_n100N1000bad70$bad])))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad70",model="SA", nbad = 70, nit_info = 30, infotype = "good", info = rowSums(info.ib.mp(theta, sa_n100N1000bad70)[, !true_n100N1000bad70$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad70",model="SA", nbad = 70, nit_info = 200, infotype = "total", info = rowSums(info.ib.mp(theta, sa_n200N5000bad70))))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad70",model="SA", nbad = 70, nit_info = 140, infotype = "bad", info = rowSums(info.ib.mp(theta, sa_n200N5000bad70)[, true_n200N5000bad70$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad70",model="SA", nbad = 70, nit_info = 60, infotype = "good", info = rowSums(info.ib.mp(theta, sa_n200N5000bad70)[, !true_n200N5000bad70$bad])))
 
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad30",model="SA", nbad = 30, nit_info = 100, infotype = "total", info = rowSums(info.ib.mp(theta, sa_n100N3000bad30))))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad30",model="SA", nbad = 30, nit_info = 30, infotype = "bad", info = rowSums(info.ib.mp(theta, sa_n100N3000bad30)[, true_n100N3000bad30$bad])))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad30",model="SA", nbad = 30, nit_info = 70, infotype = "good", info = rowSums(info.ib.mp(theta, sa_n100N3000bad30)[, !true_n100N3000bad30$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad30",model="SA", nbad = 30, nit_info = 200, infotype = "total", info = rowSums(info.ib.mp(theta, sa_n200N10000bad30))))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad30",model="SA", nbad = 30, nit_info = 60, infotype = "bad", info = rowSums(info.ib.mp(theta, sa_n200N10000bad30)[, true_n200N10000bad30$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad30",model="SA", nbad = 30, nit_info = 140, infotype = "good", info = rowSums(info.ib.mp(theta, sa_n200N10000bad30)[, !true_n200N10000bad30$bad])))
 
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad70",model="SA", nbad = 70, nit_info = 100, infotype = "total", info = rowSums(info.ib.mp(theta, sa_n100N3000bad70))))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad70",model="SA", nbad = 70, nit_info = 70, infotype = "bad", info = rowSums(info.ib.mp(theta, sa_n100N3000bad70)[, true_n100N1000bad70$bad])))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad70",model="SA", nbad = 70, nit_info = 30, infotype = "good", info = rowSums(info.ib.mp(theta, sa_n100N3000bad70)[, !true_n100N1000bad70$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad70",model="SA", nbad = 70, nit_info = 200, infotype = "total", info = rowSums(info.ib.mp(theta, sa_n200N10000bad70))))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad70",model="SA", nbad = 70, nit_info = 140, infotype = "bad", info = rowSums(info.ib.mp(theta, sa_n200N10000bad70)[, true_n200N5000bad70$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad70",model="SA", nbad = 70, nit_info = 60, infotype = "good", info = rowSums(info.ib.mp(theta, sa_n200N10000bad70)[, !true_n200N5000bad70$bad])))
 
 
 # add mod0
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad30",model="mod0", nbad = 30, nit_info = 100, infotype = "total", info = rowSums(info.ib.mp(theta, mod0_n100N1000bad30))))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad30",model="mod0", nbad = 30, nit_info = 30, infotype = "bad", info = rowSums(info.ib.mp(theta, mod0_n100N1000bad30)[, true_n100N1000bad30$bad])))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad30",model="mod0", nbad = 30, nit_info = 70, infotype = "good", info = rowSums(info.ib.mp(theta, mod0_n100N1000bad30)[, !true_n100N1000bad30$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad30",model="mod0", nbad = 30, nit_info = 200, infotype = "total", info = rowSums(info.ib.mp(theta, mod0_n200N5000bad30))))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad30",model="mod0", nbad = 30, nit_info = 60, infotype = "bad", info = rowSums(info.ib.mp(theta, mod0_n200N5000bad30)[, true_n200N5000bad30$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad30",model="mod0", nbad = 30, nit_info = 140, infotype = "good", info = rowSums(info.ib.mp(theta, mod0_n200N5000bad30)[, !true_n200N5000bad30$bad])))
 
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad70",model="mod0", nbad = 70, nit_info = 100, infotype = "total", info = rowSums(info.ib.mp(theta, mod0_n100N1000bad70))))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad70",model="mod0", nbad = 70, nit_info = 70, infotype = "bad", info = rowSums(info.ib.mp(theta, mod0_n100N1000bad70)[, true_n100N1000bad70$bad])))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N1000bad70",model="mod0", nbad = 70, nit_info = 30, infotype = "good", info = rowSums(info.ib.mp(theta, mod0_n100N1000bad70)[, !true_n100N1000bad70$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad70",model="mod0", nbad = 70, nit_info = 200, infotype = "total", info = rowSums(info.ib.mp(theta, mod0_n200N5000bad70))))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad70",model="mod0", nbad = 70, nit_info = 140, infotype = "bad", info = rowSums(info.ib.mp(theta, mod0_n200N5000bad70)[, true_n200N5000bad70$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N5000bad70",model="mod0", nbad = 70, nit_info = 60, infotype = "good", info = rowSums(info.ib.mp(theta, mod0_n200N5000bad70)[, !true_n200N5000bad70$bad])))
 
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad30",model="mod0", nbad = 30, nit_info = 100, infotype = "total", info = rowSums(info.ib.mp(theta, mod0_n100N3000bad30))))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad30",model="mod0", nbad = 30, nit_info = 30, infotype = "bad", info = rowSums(info.ib.mp(theta, mod0_n100N3000bad30)[, true_n100N3000bad30$bad])))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad30",model="mod0", nbad = 30, nit_info = 70, infotype = "good", info = rowSums(info.ib.mp(theta, mod0_n100N3000bad30)[, !true_n100N3000bad30$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad30",model="mod0", nbad = 30, nit_info = 200, infotype = "total", info = rowSums(info.ib.mp(theta, mod0_n200N10000bad30))))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad30",model="mod0", nbad = 30, nit_info = 60, infotype = "bad", info = rowSums(info.ib.mp(theta, mod0_n200N10000bad30)[, true_n200N10000bad30$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad30",model="mod0", nbad = 30, nit_info = 140, infotype = "good", info = rowSums(info.ib.mp(theta, mod0_n200N10000bad30)[, !true_n200N10000bad30$bad])))
 
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad70",model="mod0", nbad = 70, nit_info = 100, infotype = "total", info = rowSums(info.ib.mp(theta, mod0_n100N3000bad70))))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad70",model="mod0", nbad = 70, nit_info = 70, infotype = "bad", info = rowSums(info.ib.mp(theta, mod0_n100N3000bad70)[, true_n100N1000bad70$bad])))
-testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n100N3000bad70",model="mod0", nbad = 70, nit_info = 30, infotype = "good", info = rowSums(info.ib.mp(theta, mod0_n100N3000bad70)[, !true_n100N1000bad70$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad70",model="mod0", nbad = 70, nit_info = 200, infotype = "total", info = rowSums(info.ib.mp(theta, mod0_n200N10000bad70))))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad70",model="mod0", nbad = 70, nit_info = 140, infotype = "bad", info = rowSums(info.ib.mp(theta, mod0_n200N10000bad70)[, true_n200N5000bad70$bad])))
+testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200N10000bad70",model="mod0", nbad = 70, nit_info = 60, infotype = "good", info = rowSums(info.ib.mp(theta, mod0_n200N10000bad70)[, !true_n200N5000bad70$bad])))
 
 # *** CFF - report a plot of this one?
 # Is there an in-text summary we can provide?
+# That's odd - what's with the spike in info above 3 or so?
 ggplot(testinfo_dat2 %>% filter(infotype == "total"), aes(theta, info, col = model)) + facet_wrap(~itembank) + geom_path() #hmm. I imagine there's a way to compute a discrepancy between true and estimated
 
 # *** LMF - Waller and I (2017) computed a RIMSE-like measure for info recovery - could easily genearlize to test info (perhaps divide by #items)
@@ -595,88 +606,88 @@ ggplot(testinfo_dat2 %>% filter(infotype == "total"), aes(theta, info, col = mod
 #######################
 
 ## look at the variety of items administered for each model condition
-true_n100N1000bad30$nadmin <- res %>% filter(ni == 100, N == 1000, bad == 30, model == "true") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
-true_n100N1000bad70$nadmin <- res %>% filter(ni == 100, N == 1000, bad == 70, model == "true") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
-true_n100N3000bad30$nadmin <- res %>% filter(ni == 100, N == 3000, bad == 30, model == "true") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
-true_n100N3000bad70$nadmin <- res %>% filter(ni == 100, N == 3000, bad == 70, model == "true") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
+true_n200N5000bad30$nadmin <- res %>% filter(ni == 200, N == 5000, bad == 30, model == "true") %>% select(itemadmin1:itemadmin25) %>% 
+  map_dfc(function(x) summary(factor(x, levels = 1:200))) %>% rowSums()
+true_n200N5000bad70$nadmin <- res %>% filter(ni == 200, N == 5000, bad == 70, model == "true") %>% select(itemadmin1:itemadmin25) %>% 
+  map_dfc(function(x) summary(factor(x, levels = 1:200))) %>% rowSums()
+true_n200N10000bad30$nadmin <- res %>% filter(ni == 200, N == 10000, bad == 30, model == "true") %>% select(itemadmin1:itemadmin25) %>% 
+  map_dfc(function(x) summary(factor(x, levels = 1:200))) %>% rowSums()
+true_n200N10000bad70$nadmin <- res %>% filter(ni == 200, N == 10000, bad == 70, model == "true") %>% select(itemadmin1:itemadmin25) %>% 
+  map_dfc(function(x) summary(factor(x, levels = 1:200))) %>% rowSums()
 
-ks_n100N1000bad30$nadmin <- res %>% filter(ni == 100, N == 1000, bad == 30, model == "KS") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
-ks_n100N1000bad70$nadmin <- res %>% filter(ni == 100, N == 1000, bad == 70, model == "KS") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
-ks_n100N3000bad30$nadmin <- res %>% filter(ni == 100, N == 3000, bad == 30, model == "KS") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
-ks_n100N3000bad70$nadmin <- res %>% filter(ni == 100, N == 3000, bad == 70, model == "KS") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
+#ks_n200N5000bad30$nadmin <- res %>% filter(ni == 100, N == 1000, bad == 30, model == "KS") %>% select(itemadmin1:itemadmin25) %>% 
+#  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
+#ks_n200N5000bad70$nadmin <- res %>% filter(ni == 100, N == 1000, bad == 70, model == "KS") %>% select(itemadmin1:itemadmin25) %>% 
+#  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
+#ks_n200N10000bad30$nadmin <- res %>% filter(ni == 100, N == 3000, bad == 30, model == "KS") %>% select(itemadmin1:itemadmin25) %>% 
+#  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
+#ks_n200N10000bad70$nadmin <- res %>% filter(ni == 100, N == 3000, bad == 70, model == "KS") %>% select(itemadmin1:itemadmin25) %>% 
+#  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
 
-mod0_n100N1000bad30$nadmin <- res %>% filter(ni == 100, N == 1000, bad == 30, model == "k0") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
-mod0_n100N1000bad70$nadmin <- res %>% filter(ni == 100, N == 1000, bad == 70, model == "k0") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
-mod0_n100N3000bad30$nadmin <- res %>% filter(ni == 100, N == 3000, bad == 30, model == "k0") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
-mod0_n100N3000bad70$nadmin <- res %>% filter(ni == 100, N == 3000, bad == 70, model == "k0") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
+mod0_n200N5000bad30$nadmin <- res %>% filter(ni == 200, N == 5000, bad == 30, model == "k0") %>% select(itemadmin1:itemadmin25) %>% 
+  map_dfc(function(x) summary(factor(x, levels = 1:200))) %>% rowSums()
+mod0_n200N5000bad70$nadmin <- res %>% filter(ni == 200, N == 5000, bad == 70, model == "k0") %>% select(itemadmin1:itemadmin25) %>% 
+  map_dfc(function(x) summary(factor(x, levels = 1:200))) %>% rowSums()
+mod0_n200N10000bad30$nadmin <- res %>% filter(ni == 200, N == 10000, bad == 30, model == "k0") %>% select(itemadmin1:itemadmin25) %>% 
+  map_dfc(function(x) summary(factor(x, levels = 1:200))) %>% rowSums()
+mod0_n200N10000bad70$nadmin <- res %>% filter(ni == 200, N == 10000, bad == 70, model == "k0") %>% select(itemadmin1:itemadmin25) %>% 
+  map_dfc(function(x) summary(factor(x, levels = 1:200))) %>% rowSums()
 
-sa_n100N1000bad30$nadmin <- res %>% filter(ni == 100, N == 1000, bad == 30, model == "SA") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
-sa_n100N1000bad70$nadmin <- res %>% filter(ni == 100, N == 1000, bad == 70, model == "SA") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
-sa_n100N3000bad30$nadmin <- res %>% filter(ni == 100, N == 3000, bad == 30, model == "SA") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
-sa_n100N3000bad70$nadmin <- res %>% filter(ni == 100, N == 3000, bad == 70, model == "SA") %>% select(itemadmin1:itemadmin25) %>% 
-  map_dfc(function(x) summary(factor(x, levels = 1:100))) %>% rowSums()
+sa_n200N5000bad30$nadmin <- res %>% filter(ni == 200, N == 5000, bad == 30, model == "SA") %>% select(itemadmin1:itemadmin25) %>% 
+  map_dfc(function(x) summary(factor(x, levels = 1:200))) %>% rowSums()
+sa_n200N5000bad70$nadmin <- res %>% filter(ni == 200, N == 5000, bad == 70, model == "SA") %>% select(itemadmin1:itemadmin25) %>% 
+  map_dfc(function(x) summary(factor(x, levels = 1:200))) %>% rowSums()
+sa_n200N10000bad30$nadmin <- res %>% filter(ni == 200, N == 10000, bad == 30, model == "SA") %>% select(itemadmin1:itemadmin25) %>% 
+  map_dfc(function(x) summary(factor(x, levels = 1:200))) %>% rowSums()
+sa_n200N10000bad70$nadmin <- res %>% filter(ni == 200, N == 10000, bad == 70, model == "SA") %>% select(itemadmin1:itemadmin25) %>% 
+  map_dfc(function(x) summary(factor(x, levels = 1:200))) %>% rowSums()
 
 # count the number of items never administerd
 # *** CFF - if space, some in-text description of item exposure?
 # *** LMF - this would be easy enough to do - the "problem" is that KS apparently is better at using all items in the item bank than other methods
-sum(true_n100N1000bad30$nadmin == 0)
-sum(ks_n100N1000bad30$nadmin == 0)
-sum(mod0_n100N1000bad30$nadmin == 0)
-sum(sa_n100N1000bad30$nadmin == 0)
+sum(true_n200N5000bad30$nadmin == 0)
+#sum(ks_n200N5000bad30$nadmin == 0)
+sum(mod0_n200N5000bad30$nadmin == 0)
+sum(sa_n200N5000bad30$nadmin == 0)
 
-sum(true_n100N1000bad70$nadmin == 0)
-sum(ks_n100N1000bad70$nadmin == 0)
-sum(mod0_n100N1000bad70$nadmin == 0)
-sum(sa_n100N1000bad70$nadmin == 0)
+sum(true_n200N5000bad70$nadmin == 0)
+#sum(ks_n200N5000bad70$nadmin == 0)
+sum(mod0_n200N5000bad70$nadmin == 0)
+sum(sa_n200N5000bad70$nadmin == 0)
 
-sum(true_n100N3000bad30$nadmin == 0)
-sum(ks_n100N3000bad30$nadmin == 0)
-sum(mod0_n100N3000bad30$nadmin == 0)
-sum(sa_n100N3000bad30$nadmin == 0)
+sum(true_n200N10000bad30$nadmin == 0)
+#sum(ks_n200N10000bad30$nadmin == 0)
+sum(mod0_n200N10000bad30$nadmin == 0)
+sum(sa_n200N10000bad30$nadmin == 0)
 
-sum(true_n100N3000bad70$nadmin == 0)
-sum(ks_n100N3000bad70$nadmin == 0)
-sum(mod0_n100N3000bad70$nadmin == 0)
-sum(sa_n100N3000bad70$nadmin == 0)
+sum(true_n200N10000bad70$nadmin == 0)
+#sum(ks_n200N10000bad70$nadmin == 0)
+sum(mod0_n200N10000bad70$nadmin == 0)
+sum(sa_n200N10000bad70$nadmin == 0)
 
 ## compare which items are rarely administered - probably nothing intersting here
-plot(true_n100N3000bad30$nadmin, ks_n100N1000bad30$nadmin, 
-     col = 3 - true_n100N1000bad30$bad, pch = 16)
+#plot(true_n200N10000bad30$nadmin, ks_n200N5000bad30$nadmin, 
+#     col = 3 - true_n200N5000bad30$bad, pch = 16)
+#abline(0, 1)
+
+plot(true_n200N10000bad30$nadmin, mod0_n200N5000bad30$nadmin, 
+     col = 3 - true_n200N5000bad30$bad, pch = 16)
 abline(0, 1)
 
-plot(true_n100N3000bad30$nadmin, mod0_n100N1000bad30$nadmin, 
-     col = 3 - true_n100N1000bad30$bad, pch = 16)
+plot(true_n200N10000bad30$nadmin, sa_n200N5000bad30$nadmin, 
+     col = 3 - true_n200N5000bad30$bad, pch = 16)
 abline(0, 1)
 
-plot(true_n100N3000bad30$nadmin, sa_n100N1000bad30$nadmin, 
-     col = 3 - true_n100N1000bad30$bad, pch = 16)
+#plot(true_n200N10000bad70$nadmin, ks_n200N5000bad70$nadmin, 
+#     col = 3 - true_n200N5000bad70$bad, pch = 16)
+#abline(0, 1)
+
+plot(true_n200N10000bad70$nadmin, mod0_n200N5000bad70$nadmin, 
+     col = 3 - true_n200N5000bad70$bad, pch = 16)
 abline(0, 1)
 
-plot(true_n100N3000bad70$nadmin, ks_n100N1000bad70$nadmin, 
-     col = 3 - true_n100N1000bad70$bad, pch = 16)
-abline(0, 1)
-
-plot(true_n100N3000bad70$nadmin, mod0_n100N1000bad70$nadmin, 
-     col = 3 - true_n100N1000bad70$bad, pch = 16)
-abline(0, 1)
-
-plot(true_n100N3000bad70$nadmin, sa_n100N1000bad70$nadmin, 
-     col = 3 - true_n100N1000bad70$bad, pch = 16)
+plot(true_n200N10000bad70$nadmin, sa_n200N5000bad70$nadmin, 
+     col = 3 - true_n200N5000bad70$bad, pch = 16)
 abline(0, 1)
 
 
@@ -684,7 +695,7 @@ abline(0, 1)
 res$nBest<-rep(NA,nrow(res)) # initialize
 ## also a bit slow to compute
 res$nBest <- sapply(1:nrow(res), function(i){
-  infos <- info.ib.cdf(theta = res$truetheta[i], pars = get(paste0("true_n100N", res$N[i], "bad", res$bad[i])))
+  infos <- info.ib.cdf(theta = res$truetheta[i], pars = get(paste0("true_n200N", res$N[i], "bad", res$bad[i])))
   its <- which(rank(infos) > 75)
   res$nBest[i] <- sum(its %in% res[i, grep("itemadmin", colnames(res))])
 })
@@ -716,7 +727,7 @@ ggplot(res %>% filter(select=="KL"&thetacond=="normal01"), aes(bad, nBest, color
 ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==1000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
 ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==3000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
 
-# *** CFF - Report these? Only ones that have KS in them
+# *** CFF - Report these?
 # *** LMF - I'd less crazy about this one - a lot more complicated to interpret, and the patterns are difficult to explain (e.g., why does k0's relative performance vary so much? perhaps more noise than signal here)
 ggplot(res %>% filter(select=="KL"&thetacond!="normal01"&N==1000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
 ggplot(res %>% filter(select=="KL"&thetacond!="normal01"&N==3000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
