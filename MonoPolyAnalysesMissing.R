@@ -694,10 +694,13 @@ abline(0, 1)
 ## count the number of the truly most informative that are administered for each row
 res$nBest<-rep(NA,nrow(res)) # initialize
 ## also a bit slow to compute
-res$nBest <- sapply(1:nrow(res), function(i){
+#res$nBest <- 
+
+#res$nBest[1:10]<-sapply(1:10, function(i){
+res$nBest<-sapply(1:nrow(res), function(i){
   infos <- info.ib.cdf(theta = res$truetheta[i], pars = get(paste0("true_n200N", res$N[i], "bad", res$bad[i])))
-  its <- which(rank(infos) > 75)
-  res$nBest[i] <- sum(its %in% res[i, grep("itemadmin", colnames(res))])
+  its <- which(rank(infos) > 175)
+  sum(its %in% res[i, grep("itemadmin", colnames(res))])
 })
 
 summary(res$nBest)
@@ -706,14 +709,14 @@ ggplot(res, aes(N, nBest)) + geom_boxplot()
 
 ggplot(res, aes(bad, nBest)) + geom_boxplot()
 
-ggplot(res, aes(model, nBest)) + geom_boxplot() ## interesting - SA performs closest to truth
+ggplot(res, aes(model, nBest)) + geom_boxplot()
 
 aggregate(nBest ~ model, data=res, mean)
 # *** CFF - Report this? for normal01? Mention collapsing across conditions?
 # *** LMF - Sure! It seems simple enough to explain, so that it won't overly complicate the paper
 aggregate(nBest ~ model + thetacond, data=res%>%filter(thetacond=="normal01"), mean) 
 
-ggplot(res, aes(select, nBest)) + geom_boxplot() # MPWI isn't too bad
+ggplot(res, aes(select, nBest)) + geom_boxplot() # MPWI isn't too bad (with complete data); just ok with missing (FI and KL look good)
 # *** CFF - numerical summary of this?
 # *** LMF - agreed, for same reason as above
 aggregate(nBest ~ select, data=res%>%filter(thetacond=="normal01"), mean) # report this. Mention collapsing across conditions?
@@ -724,10 +727,10 @@ ggplot(res %>% filter(select=="MPWI"&thetacond=="normal01"), aes(bad, nBest, col
 ggplot(res %>% filter(select=="KL"&thetacond=="normal01"), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~N)
 
 ## plots at discrete points along theta
-ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==1000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
-ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==3000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
+ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==5000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
+ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==10000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
 
 # *** CFF - Report these?
 # *** LMF - I'd less crazy about this one - a lot more complicated to interpret, and the patterns are difficult to explain (e.g., why does k0's relative performance vary so much? perhaps more noise than signal here)
-ggplot(res %>% filter(select=="KL"&thetacond!="normal01"&N==1000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
-ggplot(res %>% filter(select=="KL"&thetacond!="normal01"&N==3000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
+ggplot(res %>% filter(select=="KL"&thetacond!="normal01"&N==5000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
+ggplot(res %>% filter(select=="KL"&thetacond!="normal01"&N==10000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
