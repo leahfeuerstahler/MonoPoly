@@ -124,9 +124,19 @@ ggplot(recovery %>% filter(thetacond == "normal01"),
 # Probably omit KLL and KLP, as these only show up in catR (not sure if published) and didn't do great anyway. But, mention in-text or footnote.
 # *** LMF - I agree that the rsme plot is probably the best illustration at this point
 #         - I also agree with the suggestion to drop the KL results at this point
+
+# reorder linetype order
+recovery$linetype <- forcats::lvls_reorder(recovery$linetype, c(3, 4, 1, 2))
+
+jpeg("rmse fig.jpeg", width = 6, height = 6, units = "in", res = 600)
 ggplot(recovery %>% filter(select == "KL" & thetacond != "normal01"),
-       aes(thetacond, rmse, group = model, color = model)) + 
-  geom_point() + geom_line() + facet_wrap(~linetype)
+       aes(thetacond, rmse, group = model, color = model, shape = model)) + 
+  geom_point() + geom_line() + facet_wrap(~linetype) + 
+  theme_minimal() + theme(legend.position = "bottom") + 
+  scale_colour_grey(labels = c("2PL", "MP", "true")) + 
+  scale_x_discrete(labels = as.character(seq(-2, 2, by = .5)), name = expression(theta))
+dev.off()
+
 
 # *** CFF - report this one? Though I have some trouble making good sense of this one
 # *** LMF - maybe skip this one - it mostly shows the bias of the EAP estimator rather than any meaningful group differences
@@ -231,9 +241,11 @@ ggplot(res, aes(factor(nbad_admin), thetadiff, fill = model)) + geom_boxplot(out
   geom_hline(yintercept = 0) + lims(y = c(-1.5, 1.5)) + facet_wrap(~model)
 
 # CFF - woah is there an outlier in there somewhere?
-# what is the warning message about non-finite values?
+# what is the warning message about non-finite values? LMF - I think this warning signals that the ylims are smaller than the outliers (which we aren't plotting anyways)
+# LMF - yes, seems to be some strange outlier behavior - not something I'd expect to replicate or be meaniningful
 ggplot(res, aes(factor(nbad_admin), thetadiff2, fill = model)) + geom_boxplot(outlier.shape = NA) + 
-  lims(y = c(0, .75)) + facet_wrap(~model)
+  lims(y = c(0, 1)) + 
+  facet_wrap(~model)
 
 # the more bad items administered, the lower the standard errors?
 # CFF -more variation in standard errors?
@@ -247,9 +259,19 @@ recovery3 <- res %>%
 
 # *** LMF - if we report anything from this section, I'd suggest the following plot or the one after
 # Sure, either one looks good to me
+
+# reorder linetype order
+recovery3$bank <- forcats::lvls_reorder(recovery3$bank, c(3, 4, 1, 2))
+
+# ***LMF - color scheme isn't ideal on this one - I think we either need to move to color or rearrange somehow
+jpeg("prop bad items fig.jpeg", width = 6, height = 6, units = "in", res = 600)
 ggplot(recovery3 %>% filter(thetacond == "normal01"),
        aes(model, prop_nbad, group = select, color = select)) + 
-  geom_point() + geom_line() + facet_wrap(~bank)
+  geom_point() + geom_line() + facet_wrap(~bank) + theme_minimal() + 
+  labs(y = "proportion of 'bad' items administered") + theme(legend.position = "bottom") + 
+  scale_color_grey() + scale_x_discrete(labels = c("2PL", "MP", "true"))
+dev.off()
+
 
 # bad items are less likely to be administered if item pars are estimated than if true item pars are used
 # SA is more likely, in most cases, to make use of bad items
