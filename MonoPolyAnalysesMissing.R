@@ -263,12 +263,11 @@ recovery3 <- res %>%
 # reorder linetype order
 recovery3$bank <- forcats::lvls_reorder(recovery3$bank, c(3, 4, 1, 2))
 
-# ***LMF - color scheme isn't ideal on this one - I think we either need to move to color or rearrange somehow
 jpeg("prop bad items fig.jpeg", width = 6, height = 6, units = "in", res = 600)
 ggplot(recovery3 %>% filter(thetacond == "normal01"),
-       aes(model, prop_nbad, group = select, color = select)) + 
+       aes(model, prop_nbad, group = select, linetype = select, color = select)) + 
   geom_point() + geom_line() + facet_wrap(~bank) + theme_minimal() + 
-  labs(y = "proportion of 'bad' items administered") + theme(legend.position = "bottom") + 
+  labs(y = "proportion of \"bad\" items administered") + theme(legend.position = "bottom") + 
   scale_color_grey() + scale_x_discrete(labels = c("2PL", "MP", "true"))
 dev.off()
 
@@ -528,8 +527,18 @@ RIMSE_res2 <- rbind(data.frame(bank = "n200N5000bad30", model = "2PL", bad = tru
 # *** LMF - this looks good to me
 # *** CFF - looks like SA does well for "bad" items in all but N=5000 bad=30 condition?
 #           similar, though slightly worse for standard items
+RIMSE_res2 <- RIMSE_res2 %>% 
+  mutate(bank = forcats::fct_recode(bank, "N = 5000, 30 bad items" = "n200N5000bad30",
+                                    "N = 5000, 70 bad items" = "n200N5000bad70",
+                                    "N = 10000, 30 bad items" = "n200N10000bad30",
+                                    "N = 10000, 70 bad items" = "n200N10000bad70"))
+
+jpeg("rimse fig.jpeg", width = 6, height = 6, units = "in", res = 600)
 ggplot(RIMSE_res2, aes(bad, RIMSE_p, fill = model)) + 
-  geom_boxplot(outlier.shape = NA) + lims(y = c(0, .35)) + facet_wrap(~bank)
+  geom_boxplot(outlier.shape = NA) + lims(y = c(0, .35)) + facet_wrap(~bank) + 
+  scale_fill_grey(start = .5, labels = c("2PL", "MP")) + theme_minimal() + 
+  labs(x = "", y = "RIMSE") + scale_x_discrete(labels = c("2PL items", "non-2PL items")) 
+dev.off()
 #############################
 
 ## do bad items provide more true information than non-bad items?
@@ -619,7 +628,15 @@ testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200
 # *** CFF - report a plot of this one?
 # Is there an in-text summary we can provide?
 # That's odd - what's with the spike in info above 3 or so?
-ggplot(testinfo_dat2 %>% filter(infotype == "total"), aes(theta, info, col = model)) + facet_wrap(~itembank) + geom_path() #hmm. I imagine there's a way to compute a discrepancy between true and estimated
+
+# *** LMF - seems to be an error in true info calculation, see the following summaries:
+tapply(testinfo_dat2$info, testinfo_dat2$model, summary)
+tapply(testinfo_dat2$info, testinfo_dat2$infotype, summary)
+# *** LMF - mot sure what to do about this (other than excluding Inf cases) - seems to trace back to the rpf package
+
+
+ggplot(testinfo_dat2 %>% filter(infotype == "total" & info < Inf), 
+       aes(theta, info, col = model)) + facet_wrap(~itembank) + geom_path() #hmm. I imagine there's a way to compute a discrepancy between true and estimated
 
 # *** LMF - Waller and I (2017) computed a RIMSE-like measure for info recovery - could easily genearlize to test info (perhaps divide by #items)
 #           hmm....although this is interesting, I wonder if showing such wonky information functions would
@@ -753,6 +770,6 @@ ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==5000), aes(bad, nB
 ggplot(res %>% filter(select=="MPWI"&thetacond!="normal01"&N==10000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
 
 # *** CFF - Report these?
-# *** LMF - I'd less crazy about this one - a lot more complicated to interpret, and the patterns are difficult to explain (e.g., why does k0's relative performance vary so much? perhaps more noise than signal here)
+# *** LMF - I'm less crazy about this one - a lot more complicated to interpret, and the patterns are difficult to explain (e.g., why does k0's relative performance vary so much? perhaps more noise than signal here)
 ggplot(res %>% filter(select=="KL"&thetacond!="normal01"&N==5000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
 ggplot(res %>% filter(select=="KL"&thetacond!="normal01"&N==10000), aes(bad, nBest, color=model))+geom_boxplot()+facet_wrap(~thetacond)
