@@ -134,9 +134,11 @@ ggplot(recovery %>% filter(select == "KL" & thetacond != "normal01"),
   geom_point() + geom_line() + facet_wrap(~linetype) + 
   theme_minimal() + theme(legend.position = "bottom") + 
   scale_colour_grey(labels = c("2PL", "MP", "true")) + 
+  scale_shape(labels=c("2PL","MP","true")) +
   scale_x_discrete(labels = as.character(seq(-2, 2, by = .5)), name = expression(theta))
 dev.off()
 
+  
 
 # *** CFF - report this one? Though I have some trouble making good sense of this one
 # *** LMF - maybe skip this one - it mostly shows the bias of the EAP estimator rather than any meaningful group differences
@@ -264,7 +266,7 @@ recovery3 <- res %>%
 recovery3$bank <- forcats::lvls_reorder(recovery3$bank, c(3, 4, 1, 2))
 
 jpeg("prop bad items fig.jpeg", width = 6, height = 6, units = "in", res = 600)
-ggplot(recovery3 %>% filter(thetacond == "normal01"),
+ggplot(recovery3 %>% filter(select %in% c("FI","KL","MPWI") & thetacond == "normal01"),
        aes(model, prop_nbad, group = select, linetype = select, color = select)) + 
   geom_point() + geom_line() + facet_wrap(~bank) + theme_minimal() + 
   labs(y = "proportion of \"bad\" items administered") + theme(legend.position = "bottom") + 
@@ -322,6 +324,8 @@ trace.cdf<-function(theta, item){
     }
   }
   P<-cbind(1-P,P)
+  # ***CFF is problem with computing "true" info due to numerical instability?
+  P[P<1e-10]<-1e-10
   return(P)
 }
 info.cdf<-function(theta,item){
@@ -534,8 +538,9 @@ RIMSE_res2 <- RIMSE_res2 %>%
                                     "N = 10000, 70 bad items" = "n200N10000bad70"))
 
 jpeg("rimse fig.jpeg", width = 6, height = 6, units = "in", res = 600)
+# warnings are for a few values above ylim
 ggplot(RIMSE_res2, aes(bad, RIMSE_p, fill = model)) + 
-  geom_boxplot(outlier.shape = NA) + lims(y = c(0, .35)) + facet_wrap(~bank) + 
+  geom_boxplot(outlier.shape = NA) + lims(y = c(0, .5)) + facet_wrap(~bank) + 
   scale_fill_grey(start = .5, labels = c("2PL", "MP")) + theme_minimal() + 
   labs(x = "", y = "RIMSE") + scale_x_discrete(labels = c("2PL items", "non-2PL items")) 
 dev.off()
@@ -633,7 +638,7 @@ testinfo_dat2 <- rbind(testinfo_dat2, data.frame(theta = theta, itembank = "n200
 tapply(testinfo_dat2$info, testinfo_dat2$model, summary)
 tapply(testinfo_dat2$info, testinfo_dat2$infotype, summary)
 # *** LMF - mot sure what to do about this (other than excluding Inf cases) - seems to trace back to the rpf package
-
+# *** CFF  - not due to rpf, due to instability in trace.cdf. P[P<1e-10]<-1e-10 effectively fixes it
 
 ggplot(testinfo_dat2 %>% filter(infotype == "total" & info < Inf), 
        aes(theta, info, col = model)) + facet_wrap(~itembank) + geom_path() #hmm. I imagine there's a way to compute a discrepancy between true and estimated
