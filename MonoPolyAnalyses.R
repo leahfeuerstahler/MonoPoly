@@ -5,6 +5,7 @@ library(tidyr)
 library(forcats)
 library(purrr)
 library(rpf)
+library(gridExtra)
 
 ### CFF - results I wonder if we should report have three asterisks: ***
 #### Complete Data Results - Read in Data ####
@@ -102,8 +103,38 @@ ggplot(recovery %>% filter(thetacond == "normal01"),
        aes(model, rmse, group = select, color = select)) + 
   geom_point() + geom_line() + facet_wrap(~linetype)
 
-aggregate(rmse ~ model, data=recovery, mean)
-aggregate(rmse ~ model + N + bad, data=recovery, mean) # *** CFF - report this in-text? (or a condensed way of summarizing these)
+### *** CFF: some in-text summaries; some maybe include if they help quickly summarize
+aggregate(rmse ~ model, data=recovery, mean) # but, this is across normal and discrete points
+aggregate(rmse ~ model + N + bad, data=recovery, mean) # same here
+
+## this is across all item selection approaches
+aggregate(rmse ~ model, data=filter(recovery, thetacond=="normal01"),mean)
+aggregate(rmse ~ model + N + bad, data=filter(recovery, thetacond=="normal01"),mean)
+
+## Probably report KL in-text as that's available for KS and allows comparison across all
+aggregate(rmse ~ model + N + bad, data=filter(recovery, thetacond=="normal01"&select=="KL"),mean)
+
+## But, for this to be interesting for MP, should report either FI or MPWI
+## Overall, did it matter?
+aggregate(rmse ~ model, data=filter(recovery, thetacond=="normal01"&select=="FI"),mean)
+aggregate(rmse ~ model, data=filter(recovery, thetacond=="normal01"&select=="MPWI"),mean)
+
+aggregate(rmse ~ select, data=filter(recovery, thetacond=="normal01"),mean)
+# here, different by no more than .003
+
+rmsefi<-aggregate(rmse ~ model + N + bad, data=filter(recovery, thetacond=="normal01"&select=="FI"),mean)
+rmsempwi<-aggregate(rmse ~ model + N + bad, data=filter(recovery, thetacond=="normal01"&select=="MPWI"),mean)
+round(rmsefi$rmse - rmsempwi$rmse,3) # no different in any given cell by more than .006
+
+# Do all of these fit in a table?
+rmsekl<-aggregate(rmse ~ model + bad + N, data=filter(recovery, thetacond=="normal01"&select=="KL"),mean)
+rmsemfi<-aggregate(rmse ~ model + bad + N, data=filter(recovery, thetacond=="normal01"&select=="FI"),mean)
+rmsempwi<-aggregate(rmse ~ model + bad + N, data=filter(recovery, thetacond=="normal01"&select=="MPWI"),mean)
+pivot_wider(rmsekl, names_from="model", values_from="rmse")
+pivot_wider(rmsefi, names_from="model", values_from="rmse")
+pivot_wider(rmsempwi, names_from="model", values_from="rmse")
+
+
 
 ggplot(recovery %>% filter(thetacond == "normal01"),
        aes(model, bias, group = select, color = select)) + 
@@ -127,6 +158,28 @@ ggplot(recovery %>% filter(thetacond == "normal01"),
 ggplot(recovery %>% filter(select == "KL" & thetacond != "normal01"),
        aes(thetacond, rmse, group = model, color = model)) + 
   geom_point() + geom_line() + facet_wrap(~linetype)
+
+# reorder linetype order
+#recovery$linetype <- forcats::lvls_reorder(recovery$linetype, c(3, 4, 1, 2))
+
+recovery$model <- forcats::lvls_reorder(recovery$model, c(4,1,3,2))
+
+recovery$linetype<-as.factor(recovery$linetype)
+recovery <- recovery %>% 
+  mutate(linetype = forcats::fct_recode(linetype, "N = 1000, 30% non-std items" = "N = 1000, 30 bad items",
+                                    "N = 1000, 70% non-std items" = "N = 1000, 70 bad items",
+                                    "N = 3000, 30% non-std items" = "N = 3000, 30 bad items",
+                                    "N = 3000, 70% non-std items" = "N = 3000, 70 bad items"))
+
+jpeg("rmse fig complete.jpeg", width = 6, height = 6, units = "in", res = 600)
+ggplot(recovery %>% filter(select == "KL" & thetacond != "normal01"),
+       aes(thetacond, rmse, group = model, color = model, shape = model)) + 
+  geom_point() + geom_line() + facet_wrap(~linetype) + 
+  theme_minimal() + theme(legend.position = "bottom") + 
+  scale_colour_grey(labels = c("True", "2PL","MP", "KS")) + 
+  scale_shape(labels=c("True","2PL","MP","KS")) +
+  scale_x_discrete(labels = as.character(seq(-2, 2, by = .5)), name = expression(theta))
+dev.off()
 
 # *** CFF - report this one? Though I have some trouble making good sense of this one
 # *** LMF - maybe skip this one - it mostly shows the bias of the EAP estimator rather than any meaningful group differences
@@ -293,6 +346,7 @@ trace.cdf<-function(theta, item){
     }
   }
   P<-cbind(1-P,P)
+  P[P<1e-10]<-1e-10
   return(P)
 }
 info.cdf<-function(theta,item){
@@ -500,6 +554,30 @@ RIMSE_res2 <- rbind(data.frame(bank = "n100N1000bad30", model = "2PL", bad = tru
 # *** LMF - this looks good to me
 ggplot(RIMSE_res2, aes(bad, RIMSE_p, fill = model)) + 
   geom_boxplot(outlier.shape = NA) + lims(y = c(0, .35)) + facet_wrap(~bank)
+
+
+RIMSE_res2 <- RIMSE_res2 %>% 
+  mutate(bank = forcats::fct_recode(bank, "N = 1000, 30% non-std items" = "n100N1000bad30",
+                                    "N = 1000, 70% non-std items" = "n100N1000bad70",
+                                    "N = 3000, 30% non-std items" = "n100N3000bad30",
+                                    "N = 3000, 70% non-std items" = "n100N3000bad70"))
+
+jpeg("rimse fig complete.jpeg", width = 6, height = 6, units = "in", res = 600)
+# warnings are for a few values above ylim
+rimsecomplete<-ggplot(RIMSE_res2, aes(bad, RIMSE_p, fill = model)) + 
+  geom_boxplot(outlier.shape = NA) + facet_wrap(~bank) + 
+  coord_cartesian(ylim=c(0,.3))  +
+  scale_fill_grey(start = .35, end=.95, labels = c("2PL", "MP", "KS")) + theme_minimal() + 
+  labs(x = "", y = "RIMSE") + scale_x_discrete(labels = c("std items", "non-std items")) 
+rimsecomplete
+dev.off()
+
+save(rimsecomplete,file="rimsecompletefig")
+
+# *** CFF: some in-text numerical summary
+rimsetab<-aggregate(RIMSE_p ~ bank + model, mean, data=RIMSE_res2)
+rimsetab
+
 #############################
 
 ## do bad items provide more true information than non-bad items?
