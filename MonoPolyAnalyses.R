@@ -589,6 +589,16 @@ RIMSE_res2 <- rbind(data.frame(bank = "n100N1000bad30", model = "2PL", bad = tru
                     data.frame(bank = "n100N3000bad30", model = "KS", bad = true_n100N3000bad30$bad, ks_n100N3000bad30[, c("RIMSE_p")]),
                     data.frame(bank = "n100N3000bad70", model = "KS", bad = true_n100N3000bad70$bad, ks_n100N3000bad70[, c("RIMSE_p")]))
 
+RIMSE_res2info <- rbind(data.frame(bank = "n100N1000bad30", model = "2PL", bad = true_n100N1000bad30$bad, mod0_n100N1000bad30[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n100N1000bad70", model = "2PL", bad = true_n100N1000bad70$bad, mod0_n100N1000bad70[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n100N3000bad30", model = "2PL", bad = true_n100N3000bad30$bad, mod0_n100N3000bad30[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n100N3000bad70", model = "2PL", bad = true_n100N3000bad70$bad, mod0_n100N3000bad70[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n100N1000bad30", model = "SA", bad = true_n100N1000bad30$bad, sa_n100N1000bad30[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n100N1000bad70", model = "SA", bad = true_n100N1000bad70$bad, sa_n100N1000bad70[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n100N3000bad30", model = "SA", bad = true_n100N3000bad30$bad, sa_n100N3000bad30[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n100N3000bad70", model = "SA", bad = true_n100N3000bad70$bad, sa_n100N3000bad70[, c("RIMSE_p","RIMSE_i")]))
+
+
 # Looks consistent with prior research. KS doesn't do so well when true model is well-behaved
 # *** CFF Report this one?
 # *** LMF - this looks good to me
@@ -709,6 +719,29 @@ ggplot(testinfo_dat2 %>% filter(infotype == "total"), aes(theta, info, col = mod
 # *** LMF - Waller and I (2017) computed a RIMSE-like measure for info recovery - could easily genearlize to test info (perhaps divide by #items)
 #           hmm....although this is interesting, I wonder if showing such wonky information functions would
 #           be easy for reviewers to criticize (and would warrant a fair amount of extra explanation/justification)
+
+
+# *** CFF - 2020-12-22 I see we already have info recovery computed, just need to print/summarize
+
+RIMSE_res2info <- RIMSE_res2info %>% 
+  mutate(bank = forcats::fct_recode(bank, "N = 1000, 30% non-std items" = "n100N1000bad30",
+                                    "N = 1000, 70% non-std items" = "n100N1000bad70",
+                                    "N = 3000, 30% non-std items" = "n100N3000bad30",
+                                    "N = 3000, 70% non-std items" = "n100N3000bad70"))
+
+# information recovery - this looks to be highly skewed; median?
+rimseinfotab<-aggregate(RIMSE_i ~ bank + model + bad, median, data=RIMSE_res2info)
+rimseinfotab
+
+jpeg("rimse info fig complete.jpeg", width = 6, height = 6, units = "in", res = 600)
+# warnings are for a few values above ylim
+rimseinfo<-ggplot(RIMSE_res2info, aes(bad, RIMSE_i, fill = model)) + 
+  geom_boxplot(outlier.shape = NA) +  facet_wrap(~bank) + 
+  coord_cartesian(ylim=c(0,10))  +
+  scale_fill_grey(start = .35, end=.65, labels = c("2PL", "MP")) + theme_minimal() + 
+  labs(x = "", y = "RIMSE for Item Information") + scale_x_discrete(labels = c("std items", "non-std items")) 
+rimseinfo
+dev.off()
 
 #######################
 

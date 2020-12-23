@@ -588,14 +588,14 @@ ggplot(RIMSE_res %>% filter(model == "SA"), aes(factor(q), RIMSE_i, fill = facto
   facet_wrap(~bank)
 
 #############################
-RIMSE_res2 <- rbind(data.frame(bank = "n200N5000bad30", model = "2PL", bad = true_n200N5000bad30$bad, mod0_n200N5000bad30[, c("RIMSE_p")]),
-                    data.frame(bank = "n200N5000bad70", model = "2PL", bad = true_n200N5000bad70$bad, mod0_n200N5000bad70[, c("RIMSE_p")]),
-                    data.frame(bank = "n200N10000bad30", model = "2PL", bad = true_n200N10000bad30$bad, mod0_n200N10000bad30[, c("RIMSE_p")]),
-                    data.frame(bank = "n200N10000bad70", model = "2PL", bad = true_n200N10000bad70$bad, mod0_n200N10000bad70[, c("RIMSE_p")]),
-                    data.frame(bank = "n200N5000bad30", model = "SA", bad = true_n200N5000bad30$bad, sa_n200N5000bad30[, c("RIMSE_p")]),
-                    data.frame(bank = "n200N5000bad70", model = "SA", bad = true_n200N5000bad70$bad, sa_n200N5000bad70[, c("RIMSE_p")]),
-                    data.frame(bank = "n200N10000bad30", model = "SA", bad = true_n200N10000bad30$bad, sa_n200N10000bad30[, c("RIMSE_p")]),
-                    data.frame(bank = "n200N10000bad70", model = "SA", bad = true_n200N10000bad70$bad, sa_n200N10000bad70[, c("RIMSE_p")]))
+RIMSE_res2 <- rbind(data.frame(bank = "n200N5000bad30", model = "2PL", bad = true_n200N5000bad30$bad, mod0_n200N5000bad30[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n200N5000bad70", model = "2PL", bad = true_n200N5000bad70$bad, mod0_n200N5000bad70[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n200N10000bad30", model = "2PL", bad = true_n200N10000bad30$bad, mod0_n200N10000bad30[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n200N10000bad70", model = "2PL", bad = true_n200N10000bad70$bad, mod0_n200N10000bad70[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n200N5000bad30", model = "SA", bad = true_n200N5000bad30$bad, sa_n200N5000bad30[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n200N5000bad70", model = "SA", bad = true_n200N5000bad70$bad, sa_n200N5000bad70[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n200N10000bad30", model = "SA", bad = true_n200N10000bad30$bad, sa_n200N10000bad30[, c("RIMSE_p","RIMSE_i")]),
+                    data.frame(bank = "n200N10000bad70", model = "SA", bad = true_n200N10000bad70$bad, sa_n200N10000bad70[, c("RIMSE_p","RIMSE_i")]))
                     #data.frame(bank = "n200N5000bad30", model = "KS", bad = true_n200N5000bad30$bad, ks_n200N5000bad30[, c("RIMSE_p")]),
                     #data.frame(bank = "n200N5000bad70", model = "KS", bad = true_n200N5000bad70$bad, ks_n200N5000bad70[, c("RIMSE_p")]),
                     #data.frame(bank = "n200N10000bad30", model = "KS", bad = true_n200N10000bad30$bad, ks_n200N10000bad30[, c("RIMSE_p")]),
@@ -636,6 +636,7 @@ rimseall<-grid.arrange(rimsecomplete,rimsemissing, nrow=2, ncol=1)
 jpeg("rimse all.jpeg", width = 6, height = 8, units = "in", res = 1200)
 plot(rimseall)
 dev.off()
+
 #############################
 
 ## do bad items provide more true information than non-bad items?
@@ -738,6 +739,21 @@ ggplot(testinfo_dat2 %>% filter(infotype == "total"),
 # *** LMF - Waller and I (2017) computed a RIMSE-like measure for info recovery - could easily genearlize to test info (perhaps divide by #items)
 #           hmm....although this is interesting, I wonder if showing such wonky information functions would
 #           be easy for reviewers to criticize (and would warrant a fair amount of extra explanation/justification)
+
+# *** CFF - 2020-12-22 I see we already have info recovery computed, just need to print/summarize
+# information recovery - this looks to be highly skewed; median?
+rimseinfotab<-aggregate(RIMSE_i ~ bank + model + bad, median, data=RIMSE_res2)
+rimseinfotab
+
+jpeg("rimse info fig.jpeg", width = 6, height = 6, units = "in", res = 600)
+# warnings are for a few values above ylim
+rimseinfomissing<-ggplot(RIMSE_res2, aes(bad, RIMSE_i, fill = model)) + 
+  geom_boxplot(outlier.shape = NA) +  facet_wrap(~bank) + 
+  coord_cartesian(ylim=c(0,10))  +
+  scale_fill_grey(start = .35, end=.65, labels = c("2PL", "MP")) + theme_minimal() + 
+  labs(x = "", y = "RIMSE for Item Information") + scale_x_discrete(labels = c("std items", "non-std items")) 
+rimseinfomissing
+dev.off()
 
 #######################
 
