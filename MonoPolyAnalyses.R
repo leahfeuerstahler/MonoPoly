@@ -181,6 +181,29 @@ ggplot(recovery %>% filter(select == "KL" & thetacond != "normal01"),
   scale_x_discrete(labels = as.character(seq(-2, 2, by = .5)), name = expression(theta))
 dev.off()
 
+# *** CFF - for other item selection algorithms. I think we agreed on supplementary materials
+jpeg("rmse fig complete FI.jpeg", width = 6, height = 6, units = "in", res = 600)
+ggplot(recovery %>% filter(select == "FI" & thetacond != "normal01"),
+       aes(thetacond, rmse, group = model, color = model, shape = model)) + 
+  geom_point() + geom_line() + facet_wrap(~linetype) + 
+  theme_minimal() + theme(legend.position = "bottom") + 
+  scale_colour_grey(end=.6,labels = c("True", "2PL", "MP")) + 
+  scale_shape(labels=c("True","2PL","MP")) +
+  scale_x_discrete(labels = as.character(seq(-2, 2, by = .5)), name = expression(theta)) +
+  ggtitle("RMSE with Maximum Fisher Information")
+dev.off()
+jpeg("rmse fig complete MPWI.jpeg", width = 6, height = 6, units = "in", res = 600)
+ggplot(recovery %>% filter(select == "MPWI" & thetacond != "normal01"),
+       aes(thetacond, rmse, group = model, color = model, shape = model)) + 
+  geom_point() + geom_line() + facet_wrap(~linetype) + 
+  theme_minimal() + theme(legend.position = "bottom") + 
+  scale_colour_grey(end=.6,labels = c("True", "2PL", "MP")) + 
+  scale_shape(labels=c("True","2PL","MP")) +
+  scale_x_discrete(labels = as.character(seq(-2, 2, by = .5)), name = expression(theta)) +
+  ggtitle("RMSE with Maximum Posterior Weighted Information")
+dev.off()
+
+
 # *** CFF - report this one? Though I have some trouble making good sense of this one
 # *** LMF - maybe skip this one - it mostly shows the bias of the EAP estimator rather than any meaningful group differences
 #         - absolute bias (new) is a bit more interpretable if we really want to show bias
@@ -300,14 +323,31 @@ ggplot(recovery3 %>% filter(thetacond == "normal01"),
        aes(model, prop_nbad, group = select, color = select)) + 
   geom_point() + geom_line() + facet_wrap(~bank)
 
+ggplot(recovery3, aes(meanse, prop_nbad, color = bank)) + geom_point()
+
 # bad items are less likely to be administered if item pars are estimated than if true item pars are used
 # SA is more likely, in most cases, to make use of bad items
 
-ggplot(recovery3 %>% filter(select == "FI" & thetacond != "normal01"),
-       aes(thetacond, prop_nbad, group = model, color = model)) + 
-  geom_point() + geom_line() + facet_wrap(~bank)
+recovery3$bank <- as.factor(recovery3$bank)
+#recovery3$bank <- forcats::lvls_reorder(recovery3$bank, c(3, 4, 1, 2))
 
-ggplot(recovery3, aes(meanse, prop_nbad, color = bank)) + geom_point()
+recovery3 <- recovery3 %>% 
+  mutate(bank = forcats::fct_recode(bank, "N = 1000, 30% non-std items" = "N = 1000, 30 bad items",
+                                    "N = 1000, 70% non-std items" = "N = 1000, 70 bad items",
+                                    "N = 3000, 30% non-std items" = "N = 3000, 30 bad items",
+                                    "N = 3000, 70% non-std items" = "N = 3000, 70 bad items")) %>%
+  ungroup(model) %>%
+  mutate(model = forcats::lvls_reorder(model, c(4,1,3,2)))
+
+jpeg("prop bad items fig complete.jpeg", width = 6, height = 6, units = "in", res = 600)
+ggplot(recovery3 %>% filter(select %in% c("FI","KL","MPWI") & thetacond == "normal01"),
+       aes(model, prop_nbad, group = select, linetype = select, color = select)) + 
+  geom_point() + geom_line() + facet_wrap(~bank) + theme_minimal() + 
+  labs(y = "Proportion of non-standard items administered", x="Model") + theme(legend.position = "bottom") + 
+  scale_color_grey(name="Item Selection Algorithm", labels=c("MFI","KL","MPWI")) +
+  scale_linetype(name="Item Selection Algorithm", labels=c("MFI","KL","MPWI"))+
+  scale_x_discrete(labels = c("True", "2PL", "MP", "KS"))
+dev.off()
 
 #### RIMSEs ####
 

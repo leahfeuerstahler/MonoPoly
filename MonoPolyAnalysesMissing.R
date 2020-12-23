@@ -178,7 +178,30 @@ ggplot(recovery %>% filter(select == "KL" & thetacond != "normal01"),
   scale_shape(labels=c("True","2PL","MP")) +
   scale_x_discrete(labels = as.character(seq(-2, 2, by = .5)), name = expression(theta))
 dev.off()
-  
+
+# *** CFF - for other item selection algorithms. I think we agreed on supplementary materials
+jpeg("rmse fig FI.jpeg", width = 6, height = 6, units = "in", res = 600)
+ggplot(recovery %>% filter(select == "FI" & thetacond != "normal01"),
+       aes(thetacond, rmse, group = model, color = model, shape = model)) + 
+  geom_point() + geom_line() + facet_wrap(~linetype) + 
+  theme_minimal() + theme(legend.position = "bottom") + 
+  scale_colour_grey(end=.6,labels = c("True", "2PL", "MP")) + 
+  scale_shape(labels=c("True","2PL","MP")) +
+  scale_x_discrete(labels = as.character(seq(-2, 2, by = .5)), name = expression(theta)) +
+  ggtitle("RMSE with Maximum Fisher Information")
+dev.off()
+jpeg("rmse fig MPWI.jpeg", width = 6, height = 6, units = "in", res = 600)
+ggplot(recovery %>% filter(select == "MPWI" & thetacond != "normal01"),
+       aes(thetacond, rmse, group = model, color = model, shape = model)) + 
+  geom_point() + geom_line() + facet_wrap(~linetype) + 
+  theme_minimal() + theme(legend.position = "bottom") + 
+  scale_colour_grey(end=.6,labels = c("True", "2PL", "MP")) + 
+  scale_shape(labels=c("True","2PL","MP")) +
+  scale_x_discrete(labels = as.character(seq(-2, 2, by = .5)), name = expression(theta)) +
+  ggtitle("RMSE with Maximum Posterior Weighted Information")
+dev.off()
+
+
 
 # *** CFF - report this one? Though I have some trouble making good sense of this one
 # *** LMF - maybe skip this one - it mostly shows the bias of the EAP estimator rather than any meaningful group differences
@@ -709,7 +732,7 @@ tapply(testinfo_dat2$info, testinfo_dat2$infotype, summary)
 # *** LMF - mot sure what to do about this (other than excluding Inf cases) - seems to trace back to the rpf package
 # *** CFF  - not due to rpf, due to instability in trace.cdf. P[P<1e-10]<-1e-10 effectively fixes it
 
-ggplot(testinfo_dat2 %>% filter(infotype == "total" & info < Inf), 
+ggplot(testinfo_dat2 %>% filter(infotype == "total"), 
        aes(theta, info, col = model)) + facet_wrap(~itembank) + geom_path() #hmm. I imagine there's a way to compute a discrepancy between true and estimated
 
 # *** LMF - Waller and I (2017) computed a RIMSE-like measure for info recovery - could easily genearlize to test info (perhaps divide by #items)
